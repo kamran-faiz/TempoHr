@@ -6,24 +6,33 @@ import { defineEmits } from 'vue';
 const emit = defineEmits(['close']);
 
 
-defineProps({
+const props = defineProps({
     department: {
         type: Object,
-        default: () => ({}),
+        default: null,
     },
 });
-
+const form = useForm({
+    'name': props.department ? props.department.name : '',
+    'description': props.department ? props.department.description : '',
+});
 
 const submitDepartment = () => {
    
-    form.post(route('departments.store'), {
-        onSuccess: () => {
-           
-            form.reset();
-            emit('close');
-        },
-        
-    });
+    if (props.department) {
+        form.put(route('departments.update', props.department.id), {
+            onSuccess: () => {
+                emit('close');
+            },
+        });
+    } else {
+        form.post(route('departments.store'), {
+            onSuccess: () => {
+                emit('close');
+            },
+        });
+    }
+   
 };
 </script>
 <template>
@@ -36,7 +45,7 @@ const submitDepartment = () => {
       <!-- Header -->
       <div class="flex items-center justify-between mb-10">
         <div>
-          <h3 class="text-headline-md font-epilogue text-on-surface mb-2">Department Details</h3>
+          <h3 class="text-headline-md font-epilogue text-on-surface mb-2">{{ props.department ? 'Update Department' : 'Create Department' }}</h3>
           <p class="text-body-md font-manrope text-on-surface-variant">Set up the structure and leadership for your new organizational unit.</p>
         </div>
         <button @click="emit('close')" class="p-2 hover:bg-surface-container-low rounded-lg transition-colors">
@@ -56,6 +65,9 @@ const submitDepartment = () => {
             v-model="form.name"
           />
         </div>
+        <p v-if="form.errors.name" class="text-error text-body-sm">
+          {{ form.errors.name }}
+        </p>
 
         <!-- Description -->
         <div class="space-y-2">
@@ -72,9 +84,10 @@ const submitDepartment = () => {
           <button @click="emit('close')" class="px-8 py-3 rounded-lg border border-on-surface text-on-surface font-manrope font-semibold hover:bg-surface-container-low transition-colors">
             Cancel
           </button>
-          <button @click="submitDepartment" :disabled="form.processing" class="px-8 py-3 rounded-lg bg-primary-container text-on-primary-container font-epilogue font-bold shadow-sm hover:opacity-90 active:scale-95 transition-all">
-            Create Department
+          <button  @click="submitDepartment" :disabled="form.processing" class="px-8 py-3 rounded-lg bg-primary-container text-on-primary-container font-epilogue font-bold shadow-sm hover:opacity-90 active:scale-95 transition-all">
+           {{ props.department ? 'Update Department' : 'Create Department' }}
           </button>
+         
         </div>
 
       </div>

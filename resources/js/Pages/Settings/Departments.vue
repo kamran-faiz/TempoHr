@@ -15,6 +15,7 @@ defineProps({
         default: () => [],
     },
 });
+const selectedDepartment = ref(null);
 
 const form = useForm({
     'name': '',
@@ -88,7 +89,7 @@ const updateDepartment = () => {
                 <h2 class="font-headline-lg text-[#2D2A26] mb-1">Department Management</h2>
                 <p class="font-body-md text-[#2D2A26]/60">Manage and organize your company departments</p>
               </div>
-              <button @click="showDepartmentModal = true" class="bg-[#F5D142] text-[#2D2A26] px-6 py-3 rounded-lg font-epilogue font-semibold shadow-sm hover:opacity-90 transition-all flex items-center gap-2">
+              <button @click="showDepartmentModal = true; selectedDepartment = null" class="bg-[#F5D142] text-[#2D2A26] px-6 py-3 rounded-lg font-epilogue font-semibold shadow-sm hover:opacity-90 transition-all flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">add</span>
                 Add New Department
               </button>
@@ -133,7 +134,7 @@ const updateDepartment = () => {
                     <td class="py-5 font-body-md text-[#2D2A26]/70">{{ department.description }}</td>
                     <td class="py-5 text-right">
                       <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button @click="openEditModal(department)" class="p-2 hover:bg-[#F5D142]/20 rounded-lg transition-colors text-[#2D2A26]">
+                        <button @click="selectedDepartment = department; showDepartmentModal = true" class="p-2 hover:bg-[#F5D142]/20 rounded-lg transition-colors text-[#2D2A26]">
                           <span class="material-symbols-outlined">edit</span>
                         </button>
                         <button @click="openDeleteModal(department.id)" class="p-2 hover:bg-error/10 rounded-lg transition-colors text-error">
@@ -150,7 +151,7 @@ const updateDepartment = () => {
         </div>
       </div>
     </div>
-    <DepartmentModal v-if="showDepartmentModal" @close="showDepartmentModal = false"/>
+    <DepartmentModal v-if="showDepartmentModal" :department="selectedDepartment" @close="showDepartmentModal = false"/>
     <ConfirmModal
     :show="isConfirming"
     title="Confirm Deletion"
