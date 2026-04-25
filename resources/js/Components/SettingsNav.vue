@@ -13,7 +13,7 @@ import {Link} from '@inertiajs/vue3';
 <span class="font-body-md">Department Management</span>
 <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
 </Link>
-<Link class="flex items-center justify-between px-4 py-3 rounded-lg  transition-all group" href="#">
+<Link :class="route().current('designations.index') ? 'bg-[#F5D142] text-[#2D2A26] font-semibold' : 'text-[#2D2A26]/70 hover:bg-[#F5F0E8]'" class="flex items-center justify-between px-4 py-3 rounded-lg  transition-all group" :href="route('designations.index')">
 <span>Designation Management</span>
 <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
 </Link>

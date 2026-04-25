@@ -30,7 +30,7 @@ class DesignationController extends Controller
     }
 
     public function update(Request $request, Designation $designation){
-        $validated =$request->validated([
+        $validated =$request->validate([
             'name' => 'required|string|max:100|unique:designations,name,'.$designation->id.',id,department_id,'.$request->department_id,
             'department_id' => 'required|exists:departments,id',
             'description' => 'nullable|string',
