@@ -61,7 +61,7 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, department $department)
+    public function update(Request $request, Department $department)
     {
         $validated = $request->validate([
             'name' => 'unique:departments,name,' . $department->id . '|required|string|max:100',
@@ -76,7 +76,7 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(department $department)
+    public function destroy(Department $department)
     {
         $department->delete();
         return redirect()->back()->with('success', 'Department deleted successfully.');

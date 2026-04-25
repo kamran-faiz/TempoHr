@@ -10,4 +10,9 @@ class Department extends Model
         'name',
         'description',
     ];
+
+    public function designations()
+    {
+        return $this->hasMany(Designation::class);
+    }
 }

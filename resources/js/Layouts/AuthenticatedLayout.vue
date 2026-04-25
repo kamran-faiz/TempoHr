@@ -139,7 +139,7 @@ const toggleMenu =(menu)=>{
                         <span class="material-symbols-outlined text-sm transition-transform duration-200" :class="openMenu === 'settings' ? 'rotate-180' : ''">expand_more</span>
                     </button>
                     <div v-if="openMenu === 'settings'" class="ml-4 mt-1 space-y-1">
-                        <Link :href="route('dashboard')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
+                        <Link :href="route('departments.index')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
                             <span class="material-symbols-outlined text-sm">corporate_fare</span>
                             Departments
                         </Link>

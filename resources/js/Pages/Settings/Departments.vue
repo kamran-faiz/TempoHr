@@ -99,7 +99,7 @@ const updateDepartment = () => {
             <div class="grid grid-cols-3 gap-bento-gutter mb-section-margin mt-8">
               <div class="bg-[#F8F3EB] p-6 rounded-xl border border-[#E8E0D5]">
                 <p class="font-label-caps text-[#2D2A26]/60 mb-2">TOTAL DEPARTMENTS</p>
-                <p class="font-display-num text-3xl">08</p>
+                <p class="font-display-num text-3xl">{{ departments.length }}</p>
               </div>
               <div class="bg-[#F8F3EB] p-6 rounded-xl border border-[#E8E0D5]">
                 <p class="font-label-caps text-[#2D2A26]/60 mb-2">TOTAL EMPLOYEES</p>
@@ -126,7 +126,7 @@ const updateDepartment = () => {
                     <td class="py-5">
                       <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-[#E8E0D5] flex items-center justify-center">
-                          <span class="material-symbols-outlined text-[#2D2A26]/60">corporate_fare</span>
+                          <span class="material-symbols-outlined text-[#2D2A26]/60">{{ department.name.charAt(0).toUpperCase() }}</span>
                         </div>
                         <span class="font-headline-md text-base">{{ department.name }}</span>
                       </div>
