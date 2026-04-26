@@ -12,7 +12,7 @@ class LeaveTypeController extends Controller
     {
         $leaveType = LeaveType::latest()->get();
         return Inertia::render('Settings/LeaveTypes', [
-            'leaveType' => $leaveType,
+            'leaveTypes' => $leaveType,
         ]);
     }
 
