@@ -26,10 +26,6 @@ import {Link} from '@inertiajs/vue3';
 <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
 </Link>
 <Link class="flex items-center justify-between px-4 py-3 rounded-lg text-[#2D2A26]/70 hover:bg-[#F5F0E8] transition-all font-body-md group" href="#">
-<span>Salary Components</span>
-<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
-</Link>
-<Link class="flex items-center justify-between px-4 py-3 rounded-lg text-[#2D2A26]/70 hover:bg-[#F5F0E8] transition-all font-body-md group" href="#">
 <span>Company Profile</span>
 <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
 </Link>
