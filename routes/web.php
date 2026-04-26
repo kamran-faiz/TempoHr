@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\AllowanceTypeController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('departments', DepartmentController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('designations', DesignationController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('leaveTypes', LeaveTypeController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('allowanceTypes', AllowanceTypeController::class)->only(['index', 'store', 'update', 'destroy']);
 });
 
 require __DIR__.'/auth.php';
