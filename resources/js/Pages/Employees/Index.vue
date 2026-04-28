@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import AddEmployeeModal from '@/Components/AddEmployeeModal.vue'
 import { Head,useForm } from '@inertiajs/vue3';
 import {ref} from 'vue';
 
@@ -99,7 +100,7 @@ const openCreateModal = () => {
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline-md text-lg text-[#2D2A26]">{{ employee.name }}</h3>
+              <h3 class="font-headline-md text-lg text-[#2D2A26]">{{ employee.first_name }} {{ employee.last_name }}</h3>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-50 text-green-700 border border-green-100">{{ employee.status }}</span>
             </div>
             <p class="font-label-clean text-secondary text-sm">{{ employee.designation.name }}</p>
@@ -129,5 +130,6 @@ const openCreateModal = () => {
       </div>
 
     </div>
+    <AddEmployeeModal :show="showModal" @update:show="showModal = $event" :form="form" :departments="departments" :designations="designations" :current-step="currentStep" @update:currentStep="currentStep = $event"/>
   </AuthenticatedLayout>
 </template>

@@ -8,7 +8,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\AllowanceTypeController;
-use App\Http\Controller\EmployeeController;
+use App\Http\Controllers\EmployeeController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
