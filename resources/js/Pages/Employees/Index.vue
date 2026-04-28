@@ -1,8 +1,56 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head,useForm } from '@inertiajs/vue3';
+import {ref} from 'vue';
+
+defineProps ({
+  employees: {
+    type : Array ,
+    default :() => [],
+  },
+  departments: {
+     type : Array ,
+     default :() => [],
+  },
+  designations: {
+    type : Array ,
+    default :() => [],
+  }
+})
+ 
+
+const form = useForm ({
+  'employee_code': '',
+  'first_name': '',
+  'last_name':'',
+  'email':'',
+  'phone':'',
+  'cnic':'',
+  'date_of_birth':'',
+  'gender':'',
+  'address':'',
+  'emergency_contact_name':'',
+  'emergency_contact_phone':'',
+  'profile_image':null,
+  'department_id':null,
+  'designation_id':null,
+  'employee_type':'full_time',
+  'joining_date':'',
+   'reporting_manager_id':null,
+   'status':'active',
 
 
+})
+
+const showModal = ref(false)
+const editingEmployee = ref(null)
+const currentStep = ref(1)
+const openCreateModal = () => {
+  form.reset(),
+  editingEmployee.value = null;
+  currentStep.value = 1;
+  showModal.value = true;
+}
 
 </script>
 
@@ -33,7 +81,7 @@ import { Head } from '@inertiajs/vue3';
               <option>Senior</option>
             </select>
           </div>
-          <button class="flex items-center gap-2 px-6 py-3 bg-[#F5D142] text-[#2D2A26] font-semibold rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-sm">
+          <button @click="openCreateModal" class="flex items-center gap-2 px-6 py-3 bg-[#F5D142] text-[#2D2A26] font-semibold rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-sm">
             <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'wght' 600;">add</span>
             <span class="font-headline-md text-base">Add Employee</span>
           </button>
@@ -42,20 +90,20 @@ import { Head } from '@inertiajs/vue3';
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-bento-gutter">
         
-        <div class="bg-white p-6 rounded-xl border border-[#E8E0D5] group hover:border-[#F5D142] transition-all duration-300">
+        <div  v-for="employee in employees" :key="employee.id" class="bg-white p-6 rounded-xl border border-[#E8E0D5] group hover:border-[#F5D142] transition-all duration-300">
           <div class="flex justify-between items-start mb-6">
-            <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-xl font-bold text-[#2D2A26]">MA</div>
+            <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-xl font-bold text-[#2D2A26]">{{ employee.first_name[0] }}{{ employee.last_name[0] }}</div>
             <button class="p-1.5 text-secondary/40 hover:text-[#2D2A26] transition-colors">
               <span class="material-symbols-outlined">more_vert</span>
             </button>
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline-md text-lg text-[#2D2A26]">Marcus Aurelius</h3>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-50 text-green-700 border border-green-100">Active</span>
+              <h3 class="font-headline-md text-lg text-[#2D2A26]">{{ employee.name }}</h3>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-50 text-green-700 border border-green-100">{{ employee.status }}</span>
             </div>
-            <p class="font-label-clean text-secondary text-sm">Principal Product Designer</p>
-            <p class="font-label-clean text-secondary/60 text-xs mt-1">Product & Design</p>
+            <p class="font-label-clean text-secondary text-sm">{{ employee.designation.name }}</p>
+            <p class="font-label-clean text-secondary/60 text-xs mt-1">{{ employee.department.name }}</p>
           </div>
           <div class="mt-6 pt-6 border-t border-[#F5F0E8] flex gap-2">
             <button class="flex-1 py-2 text-xs font-semibold rounded-lg bg-[#F5F0E8] hover:bg-[#F5D142] transition-colors">Profile</button>
