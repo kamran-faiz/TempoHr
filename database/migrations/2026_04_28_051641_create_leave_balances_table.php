@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('leave_balances', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('employee_id')->constrained();
+            $table->foreignId('leave_type_id')->constrained();
+            $table->integer('year');
+            $table->integer('allocated_days');
+            $table->integer('used_days')->default(0);
+            $table->integer('carried_forward_days')->default(0);
+            $table->integer('remaining_days');
             $table->timestamps();
         });
     }
