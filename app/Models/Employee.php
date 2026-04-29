@@ -52,4 +52,8 @@ class Employee extends Model
  {
     return $this->hasMany(Employee::class, 'reporting_manager_id');
  }
+ public function leaveBalances()
+{
+    return $this->hasMany(LeaveBalance::class);
+}
 }
