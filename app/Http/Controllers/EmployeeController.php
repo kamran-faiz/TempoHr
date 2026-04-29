@@ -82,10 +82,10 @@ class EmployeeController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Employee $employee)
-    {
-        $employee->delete();
-        return redirect()->back()->with('success' , 'Employee deleted successfully');
-    }
+{
+    $this->employeeService->deleteEmployee($employee);
+    return redirect()->back()->with('success', 'Employee deleted successfully');
+}
 
     
 }
