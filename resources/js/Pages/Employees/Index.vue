@@ -1,8 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import AddEmployeeModal from '@/Components/AddEmployeeModal.vue'
-import { Head,useForm } from '@inertiajs/vue3';
+import ConfirmModal from '@/Components/ConfirmModal.vue';
+import AddEmployeeModal from '@/Components/AddEmployeeModal.vue';
+import { Head,useForm,router } from '@inertiajs/vue3';
 import {ref} from 'vue';
+
 
 defineProps ({
   employees: {
@@ -43,6 +45,11 @@ const form = useForm ({
 
 })
 
+
+
+const showConfirmModal = ref(false)
+const deletingId = ref(null)
+const openDropdown = ref(null)
 const showModal = ref(false)
 const editingEmployee = ref(null)
 const currentStep = ref(1)
@@ -51,6 +58,39 @@ const openCreateModal = () => {
   editingEmployee.value = null;
   currentStep.value = 1;
   showModal.value = true;
+}
+
+const submit = () =>{
+  if(editingEmployee.value){
+    form.put(route('employees.update', editingEmployee.value.id),{
+         onSuccess : () => {
+        showModal.value = false;
+         }
+    })
+  }else{
+    form.post(route('employees.store'),{
+     forceFormData: true,
+
+      onSuccess : () => {
+        currentStep.value = 1
+        showModal.value = false;
+      }
+    })
+  }
+}
+
+const deleteEmployee = (employee) => {
+  deletingId.value = employee.id;
+  showConfirmModal.value = true ;
+}
+
+const confirmDelete = () => {
+    router.delete(route('employees.destroy', deletingId.value), {
+        onSuccess: () => {
+            deletingId.value = null;
+            showConfirmModal.value = false;
+        }
+    });
 }
 
 </script>
@@ -92,11 +132,28 @@ const openCreateModal = () => {
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-bento-gutter">
         
         <div  v-for="employee in employees" :key="employee.id" class="bg-white p-6 rounded-xl border border-[#E8E0D5] group hover:border-[#F5D142] transition-all duration-300">
-          <div class="flex justify-between items-start mb-6">
-            <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-xl font-bold text-[#2D2A26]">{{ employee.first_name[0] }}{{ employee.last_name[0] }}</div>
-            <button class="p-1.5 text-secondary/40 hover:text-[#2D2A26] transition-colors">
+          <div class="flex relative justify-between items-start mb-6">
+           <div class="w-16 h-16 rounded-full overflow-hidden bg-secondary-container flex items-center justify-center text-xl font-bold text-[#2D2A26]">
+  <img 
+    v-if="employee.profile_image" 
+    :src="`/storage/${employee.profile_image}`" 
+    class="w-full h-full object-cover"
+  />
+  <span v-else>{{ employee.first_name[0] }}{{ employee.last_name[0] }}</span>
+</div>
+            <button @click="openDropdown = openDropdown === employee.id ? null : employee.id" class="p-1.5 text-secondary/40 hover:text-[#2D2A26] transition-colors">
               <span class="material-symbols-outlined">more_vert</span>
             </button>
+            <div v-if="openDropdown === employee.id" class="absolute right-0 top-8 bg-white border border-[#E8E0D5] rounded-xl shadow-lg z-10 w-36 overflow-hidden">
+  <button @click="openEditModal(employee)" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-[#2D2A26] hover:bg-[#FAF8F5] transition-colors">
+    <span class="material-symbols-outlined text-sm">edit</span>
+    Edit
+  </button>
+  <button @click="deleteEmployee(employee)" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-error hover:bg-error-container transition-colors">
+    <span class="material-symbols-outlined text-sm">delete</span>
+    Delete
+  </button>
+</div>
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
@@ -130,6 +187,14 @@ const openCreateModal = () => {
       </div>
 
     </div>
-    <AddEmployeeModal :show="showModal" @update:show="showModal = $event" :form="form" :departments="departments" :designations="designations" :current-step="currentStep" @update:currentStep="currentStep = $event"/>
+    <ConfirmModal
+  :show="showConfirmModal"
+  title="Delete Employee"
+  message="Are you sure you want to delete this employee? This action cannot be undone."
+  confirmText="Delete"
+  @confirm="confirmDelete"
+  @close="showConfirmModal = false"
+/>
+    <AddEmployeeModal :show="showModal" @update:show="showModal = $event" :form="form" :departments="departments" :designations="designations" :current-step="currentStep" @update:currentStep="currentStep = $event" @submit="submit"/>
   </AuthenticatedLayout>
 </template>
