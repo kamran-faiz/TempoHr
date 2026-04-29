@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import ConfirmModal from '@/Components/ConfirmModal.vue';
 import AddEmployeeModal from '@/Components/AddEmployeeModal.vue';
-import { Head,useForm,router } from '@inertiajs/vue3';
+import { Head,useForm,router,Link } from '@inertiajs/vue3';
 import {ref} from 'vue';
 
 
@@ -204,7 +204,7 @@ const openEditModal = (employee) => {
             <p class="font-label-clean text-secondary/60 text-xs mt-1">{{ employee.department.name }}</p>
           </div>
           <div class="mt-6 pt-6 border-t border-[#F5F0E8] flex gap-2">
-            <button class="flex-1 py-2 text-xs font-semibold rounded-lg bg-[#F5F0E8] hover:bg-[#F5D142] transition-colors">Profile</button>
+            <Link :href="route('employees.show', employee.id)" class="flex-1 py-2 block text-xs font-semibold rounded-lg bg-[#F5F0E8] hover:bg-[#F5D142] transition-colors">Profile</Link>
             <button class="p-2 rounded-lg bg-[#F5F0E8] text-secondary hover:text-[#2D2A26] transition-colors">
               <span class="material-symbols-outlined text-sm">mail</span>
             </button>
