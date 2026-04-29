@@ -22,6 +22,10 @@ const props = defineProps({
   form:{
     type: Object,
     default: () => ({})
+  },
+  editingEmployee:{
+    type : Object,
+    defalut:() => [],
   }
 })
 
@@ -59,7 +63,7 @@ const finishOnboarding = () => emit('submit')
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-3xl font-bold tracking-tight text-stone-900 font-headline-md">
-          Onboard New Employee
+          {{ editingEmployee ? 'Edit Employee' : 'Onboard New Employee' }}
         </h1>
         <p class="text-stone-500 mt-1">Complete the employee enrollment process step by step.</p>
       </div>
@@ -271,7 +275,7 @@ const finishOnboarding = () => emit('submit')
             v-else
             @click="finishOnboarding"
             class="px-10 py-3 rounded-xl bg-primary-container text-on-primary-container font-bold flex items-center gap-2 hover:brightness-105 active:scale-95 transition-all">
-            Finish & Create Profile
+            {{ editingEmployee ? 'Save Changes' : 'Finish & Create Profile' }}
           </button>
         </div>
       </div>

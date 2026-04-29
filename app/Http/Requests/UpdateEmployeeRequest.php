@@ -37,10 +37,10 @@ class UpdateEmployeeRequest extends FormRequest
             'profile_image' => 'nullable|max:2048|mimes:jpg,jpeg,png',
             'designation_id' => 'required|exists:designations,id',
             'department_id' => 'required|exists:departments,id',
-            'employee_type' => 'required|string|in:full_time,part_time,contractor',
+            'employee_type' => 'required|string|in:full_time,part_time,contract',
             'joining_date' => 'required|date',
             'reporting_manager_id' => 'nullable|exists:employees,id',
-            'status' => 'required|string|in:active,inactive',
+            'status' => 'nullable|string|in:active,inactive',
         ];
     }
 }

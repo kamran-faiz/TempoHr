@@ -54,31 +54,44 @@ const showModal = ref(false)
 const editingEmployee = ref(null)
 const currentStep = ref(1)
 const openCreateModal = () => {
+  openDropdown.value = null;
   form.reset(),
   editingEmployee.value = null;
   currentStep.value = 1;
   showModal.value = true;
 }
 
-const submit = () =>{
-  if(editingEmployee.value){
-    form.put(route('employees.update', editingEmployee.value.id),{
-         onSuccess : () => {
+const submit = () => {
+  if (editingEmployee.value) {
+    // For Update - Use POST with _method=PUT (Important for file uploads)
+    form
+      .transform((data) => ({
+        ...data,
+        _method: 'PUT',
+      }))
+      .post(route('employees.update', editingEmployee.value.id), {
+        forceFormData: true,
+        onSuccess: () => {
+          showModal.value = false;
+        },
+        onError: (errors) => {
+          console.error('Update failed with errors:', errors);
+        }
+      });
+  } else {
+    // For Create - Keep as POST
+    form.post(route('employees.store'), {
+      forceFormData: true,
+      onSuccess: () => {
+        currentStep.value = 1;
         showModal.value = false;
-         }
-    })
-  }else{
-    form.post(route('employees.store'),{
-     forceFormData: true,
-
-      onSuccess : () => {
-        currentStep.value = 1
-        showModal.value = false;
+      },
+      onError: (errors) => {
+        console.error('Create failed with errors:', errors);
       }
-    })
+    });
   }
-}
-
+};
 const deleteEmployee = (employee) => {
   deletingId.value = employee.id;
   showConfirmModal.value = true ;
@@ -92,6 +105,33 @@ const confirmDelete = () => {
         }
     });
 }
+
+
+const openEditModal = (employee) => {
+  openDropdown.value = null;
+  editingEmployee.value = employee;
+
+  form.reset(); // Reset form first
+
+  form.first_name = employee.first_name;
+  form.last_name = employee.last_name;
+  form.email = employee.email;
+  form.phone = employee.phone;
+  form.employee_code = employee.employee_code;
+  form.gender = employee.gender;
+  form.cnic = employee.cnic;
+  form.department_id = employee.department_id;
+  form.designation_id = employee.designation_id;
+  form.employee_type = employee.employee_type;
+  form.joining_date = employee.joining_date;
+  form.address = employee.address;
+  form.emergency_contact_name = employee.emergency_contact_name;
+  form.emergency_contact_phone = employee.emergency_contact_phone;
+  form.profile_image = null;        // Important: Clear previous file
+
+  currentStep.value = 1;
+  showModal.value = true;
+};
 
 </script>
 
@@ -195,6 +235,6 @@ const confirmDelete = () => {
   @confirm="confirmDelete"
   @close="showConfirmModal = false"
 />
-    <AddEmployeeModal :show="showModal" @update:show="showModal = $event" :form="form" :departments="departments" :designations="designations" :current-step="currentStep" @update:currentStep="currentStep = $event" @submit="submit"/>
+    <AddEmployeeModal :editing-employee="editingEmployee" :show="showModal" @update:show="showModal = $event" :form="form" :departments="departments" :designations="designations" :current-step="currentStep" @update:currentStep="currentStep = $event" @submit="submit"/>
   </AuthenticatedLayout>
 </template>
