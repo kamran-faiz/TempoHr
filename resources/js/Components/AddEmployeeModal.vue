@@ -28,15 +28,15 @@ const props = defineProps({
 const steps = [ 
    { title: 'Personal Info' },
   { title: 'Employment' },
-  { title: 'Compensation' },
+  { title: 'Address & Emergency' },
   { title: 'Documents' }
 ]
 
-const emit = defineEmits(['update:currentStep', 'update:show'])
+const emit = defineEmits(['update:currentStep', 'update:show','submit'])
 
 const nextStep = () => emit('update:currentStep', props.currentStep + 1)
 const prevStep = () => emit('update:currentStep', props.currentStep - 1)
-const finishOnboarding = () => emit('update:show', false)
+const finishOnboarding = () => emit('submit')
 
 
 </script>
@@ -122,6 +122,10 @@ const finishOnboarding = () => emit('update:show', false)
       <input v-model="form.phone" type="tel" placeholder="+92 300 0000000" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5] focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 outline-none"/>
     </div>
     <div class="space-y-2">
+  <label class="block text-label-clean text-stone-600">Employee Code</label>
+  <input v-model="form.employee_code" type="text" placeholder="e.g. EMP-001" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5] focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 outline-none"/>
+</div>
+    <div class="space-y-2">
       <label class="block text-label-clean text-stone-600">Date of Birth</label>
       <input v-model="form.date_of_birth" type="date" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5] focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 outline-none"/>
     </div>
@@ -185,34 +189,23 @@ const finishOnboarding = () => emit('update:show', false)
 </div>
 
         <!-- Step 3: Salary -->
-        <div v-if="currentStep === 3" class="p-10">
+       <div v-if="currentStep === 3" class="p-10">
   <div class="mb-8">
-    <h3 class="text-2xl font-semibold">Compensation Structure</h3>
-    <p class="text-stone-500">Set up the salary and allowances.</p>
+    <h3 class="text-2xl font-semibold font-headline-md text-stone-900">Address & Emergency Contact</h3>
+    <p class="text-stone-500 mt-1">Residential and emergency information.</p>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div class="md:col-span-2">
-      <label class="block text-label-clean text-stone-600 mb-2">Basic Salary (Monthly)</label>
-      <div class="relative">
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 font-bold">$</span>
-        <input v-model="form.basic_salary" type="number" placeholder="0.00" class="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E8E0D5]"/>
-      </div>
+    <div class="md:col-span-2 space-y-2">
+      <label class="block text-label-clean text-stone-600">Residential Address</label>
+      <textarea v-model="form.address" rows="3" placeholder="Full residential address" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5] focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 outline-none resize-none"></textarea>
     </div>
     <div class="space-y-2">
-      <label class="block text-label-clean text-stone-600">House Allowance</label>
-      <input v-model="form.house_allowance" type="number" placeholder="Amount" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5]"/>
+      <label class="block text-label-clean text-stone-600">Emergency Contact Name</label>
+      <input v-model="form.emergency_contact_name" type="text" placeholder="Full name" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5] focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 outline-none"/>
     </div>
     <div class="space-y-2">
-      <label class="block text-label-clean text-stone-600">Transport Allowance</label>
-      <input v-model="form.transport_allowance" type="number" placeholder="Amount" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5]"/>
-    </div>
-    <div class="space-y-2">
-      <label class="block text-label-clean text-stone-600">Medical Allowance</label>
-      <input v-model="form.medical_allowance" type="number" placeholder="Amount" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5]"/>
-    </div>
-    <div class="space-y-2">
-      <label class="block text-label-clean text-stone-600">Tax Deduction (%)</label>
-      <input v-model="form.tax_deduction" type="number" placeholder="15" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5]"/>
+      <label class="block text-label-clean text-stone-600">Emergency Contact Phone</label>
+      <input v-model="form.emergency_contact_phone" type="text" placeholder="+92 300 0000000" class="w-full px-4 py-3 rounded-xl border border-[#E8E0D5] focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 outline-none"/>
     </div>
   </div>
 </div>
@@ -226,9 +219,16 @@ const finishOnboarding = () => emit('update:show', false)
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="border border-dashed border-[#E8E0D5] rounded-2xl p-8 text-center">
       <span class="material-symbols-outlined text-5xl text-stone-300 mb-4">add_a_photo</span>
+      <input 
+  type="file" 
+  ref="photoInput"
+  class="hidden"
+  accept="image/*"
+  @change="form.profile_image = $event.target.files[0]"
+/>
       <h4 class="font-medium">Profile Photo</h4>
       <p class="text-xs text-stone-500 mt-1">Clear headshot (Max 5MB)</p>
-      <button class="mt-6 px-6 py-2 text-sm border border-stone-700 rounded-full hover:bg-stone-50">Browse</button>
+      <button @click="$refs.photoInput.click()" class="mt-6 px-6 py-2 text-sm border border-stone-700 rounded-full hover:bg-stone-50">Browse</button>
     </div>
     <div class="border border-dashed border-[#E8E0D5] rounded-2xl p-8 text-center">
       <span class="material-symbols-outlined text-5xl text-stone-300 mb-4">badge</span>
