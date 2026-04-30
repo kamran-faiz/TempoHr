@@ -1,7 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue'
+import { ref } from 'vue';
+import leaveRequest from '@/Components/LeaveRequest.vue';
 
 defineProps({
   employee: {
@@ -165,6 +166,32 @@ const activeTab = ref('personal')
   </div>
 
 
+
+</div>
+<!-- Leave History Tab -->
+<div v-if="activeTab === 'leave'" class="grid grid-cols-12 gap-bento-gutter">
+
+  <!-- Leave Balances -->
+  <div class="col-span-12 bg-white border border-[#E8E0D5] rounded-xl p-container-padding">
+    <div class="flex justify-between items-center mb-8">
+      <h3 class="font-label-caps text-on-surface-variant">Leave Balances</h3>
+      <span class="material-symbols-outlined text-[#2D2A26]/20">calendar_today</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div v-for="balance in employee.leave_balances" :key="balance.id" class="bg-surface-container-low border border-[#E8E0D5] rounded-xl p-6">
+        <p class="font-label-caps text-on-surface-variant mb-4">{{ balance.leave_type.name }}</p>
+        <p class="font-display-num text-3xl text-[#2D2A26]">{{ balance.remaining_days }}</p>
+        <p class="font-label-clean text-on-surface-variant mt-1">days remaining</p>
+        <div class="mt-4 h-1.5 bg-[#E8E0D5] rounded-full overflow-hidden">
+          <div class="h-full bg-primary-container rounded-full" :style="{ width: `${(balance.remaining_days / balance.allocated_days) * 100}%` }"></div>
+        </div>
+        <div class="mt-3 flex justify-between">
+          <span class="font-label-clean text-xs text-on-surface-variant">Used: {{ balance.used_days }}</span>
+          <span class="font-label-clean text-xs text-on-surface-variant">Total: {{ balance.allocated_days }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
     </div>

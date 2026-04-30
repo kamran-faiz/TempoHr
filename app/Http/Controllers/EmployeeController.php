@@ -54,7 +54,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        $employee->load('department', 'designation', 'manager');
+        $employee->load('department', 'designation', 'manager','leaveBalances.leaveType' );
         return Inertia::render('Employees/Show', [
        'employee' => $employee,
 ]);

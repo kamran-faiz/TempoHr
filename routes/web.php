@@ -9,6 +9,7 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\AllowanceTypeController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\LeaveRequestController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('leaveTypes', LeaveTypeController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('allowanceTypes', AllowanceTypeController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('employees', EmployeeController::class)->only(['index', 'show', 'store' , 'update' , 'destroy']);
+    Route::resource('leaveRequests', LeaveRequestController::class)->only(['store','index']);
 });
 
 require __DIR__.'/auth.php';
