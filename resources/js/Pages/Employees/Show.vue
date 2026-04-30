@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue'
 
 defineProps({
   employee: {
@@ -8,6 +9,8 @@ defineProps({
     required: true
   }
 })
+
+const activeTab = ref('personal')
 </script>
 
 <template>
@@ -58,21 +61,21 @@ defineProps({
 
       <!-- Tabs -->
       <nav class="flex border-b border-[#E8E0D5] gap-8">
-        <button class="font-semibold text-sm pb-4 text-[#2D2A26] active-tab-indicator">Personal Info</button>
-        <button class="font-semibold text-sm pb-4 text-[#2D2A26]/40 hover:text-[#2D2A26] transition-colors">Job Details</button>
-        <button class="font-semibold text-sm pb-4 text-[#2D2A26]/40 hover:text-[#2D2A26] transition-colors">Leave History</button>
-        <button class="font-semibold text-sm pb-4 text-[#2D2A26]/40 hover:text-[#2D2A26] transition-colors">Documents</button>
+        <button @click="activeTab = 'personal'" :class="activeTab === 'personal' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Personal Info</button>
+        <button @click="activeTab = 'job'" :class="activeTab === 'job' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Job Details</button>
+        <button @click="activeTab = 'leave'" :class="activeTab === 'leave' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Leave History</button>
+        <button @click="activeTab = 'documents'" :class="activeTab === 'documents' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Documents</button>
       </nav>
 
       <!-- Content Grid -->
-      <div class="grid grid-cols-12 gap-bento-gutter">
+      <div  v-if="activeTab === 'personal'" class="grid grid-cols-12 gap-bento-gutter">
         
         <!-- General Information -->
         <div class="col-span-12 md:col-span-8 bg-white border border-[#E8E0D5] rounded-xl p-container-padding">
           <div class="flex justify-between items-center mb-8">
             <h3 class="font-label-caps text-on-surface-variant">General Information</h3>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+          <div  class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
             <div>
               <label class="font-label-clean text-on-surface-variant block mb-1">Email Address</label>
               <p class="font-body-lg text-[#2D2A26]">{{ employee.email }}</p>
@@ -124,6 +127,46 @@ defineProps({
         </div>
 
       </div>
+      <!-- Job Details Tab -->
+<div v-if="activeTab === 'job'" class="grid grid-cols-12 gap-bento-gutter">
+  
+  <!-- Employment Details -->
+  <div class="col-span-12 md:col-span-8 bg-white border border-[#E8E0D5] rounded-xl p-container-padding">
+    <div class="flex justify-between items-center mb-8">
+      <h3 class="font-label-caps text-on-surface-variant">Employment Details</h3>
+      <span class="material-symbols-outlined text-[#2D2A26]/20">work</span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+      <div>
+        <label class="font-label-clean text-on-surface-variant block mb-1">Department</label>
+        <p class="font-body-lg text-[#2D2A26]">{{ employee.department.name }}</p>
+      </div>
+      <div>
+        <label class="font-label-clean text-on-surface-variant block mb-1">Designation</label>
+        <p class="font-body-lg text-[#2D2A26]">{{ employee.designation.name }}</p>
+      </div>
+      <div>
+        <label class="font-label-clean text-on-surface-variant block mb-1">Employment Type</label>
+        <p class="font-body-lg text-[#2D2A26]">{{ employee.employee_type }}</p>
+      </div>
+      <div>
+        <label class="font-label-clean text-on-surface-variant block mb-1">Joining Date</label>
+        <p class="font-body-lg text-[#2D2A26]">{{ employee.joining_date ?? '—' }}</p>
+      </div>
+      <div>
+        <label class="font-label-clean text-on-surface-variant block mb-1">Employee Code</label>
+        <p class="font-body-lg text-[#2D2A26]">{{ employee.employee_code }}</p>
+      </div>
+      <div>
+        <label class="font-label-clean text-on-surface-variant block mb-1">Status</label>
+        <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#E8F5E9] text-[#2E7D32] text-[10px] font-bold uppercase tracking-widest border border-[#C8E6C9]">{{ employee.status }}</span>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
     </div>
   </AuthenticatedLayout>
 </template>
