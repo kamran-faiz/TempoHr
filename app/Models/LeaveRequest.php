@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Employee;
 
 class LeaveRequest extends Model
 {
@@ -14,4 +15,13 @@ class LeaveRequest extends Model
     'reason',
     'status'
 ];
+public function employee()
+{
+    return $this->belongsTo(Employee::class);
+}
+
+public function leaveType()
+{
+    return $this->belongsTo(LeaveType::class);
+}
 }

@@ -16,13 +16,13 @@ class LeaveRequestController extends Controller
      */
     public function index()
     {
-        $leaveRequest = LeaveRequest::latest()->get();
+        $leaveRequest = LeaveRequest::with(['employee.designation', 'leaveType'])->latest()->get();
         $employees = Employee::all();
         $leaveTypes = LeaveType::all();
        
           return Inertia::render('Leaves/LeaveRequests', [
             'leaveRequests' => $leaveRequest,
-            'employees' => $employees,      // ← do you have this?
+            'employees' => $employees,      
             'leaveTypes' => $leaveTypes 
         ]);
     }

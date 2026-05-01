@@ -121,7 +121,9 @@ const handleSubmit = (formData) => {
 </div>
 <div class="divide-y divide-[#E8E0D5]">
 <!-- Row 1 -->
+ 
 <div v-for="request in leaveRequests" :key="request.id" class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
+
 <div class="w-1/4 flex items-center gap-4">
 <img alt="Employee Photo" class="w-10 h-10 rounded-full object-cover" data-alt="Professional headshot of a young woman with a warm smile, outdoor lighting with soft greenery background" :src="`/storage/${request.employee.profile_image}`"/>
 <div>
