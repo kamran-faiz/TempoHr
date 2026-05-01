@@ -1,20 +1,14 @@
 <script setup>
-import { defineEmits } from 'vue';
+import { defineEmits,ref } from 'vue';
 import {useForm} from '@inertiajs/vue3';
+import { watch } from 'vue'
 
-defineProps({
+const props = defineProps({
     show: Boolean,
-    employees:{
-        type : Array,
-        default :() => [],
-    },
-    leaveTypes: {
-        type : Array,
-        default :() => [],
-
-    }
+    employees: Array,
+    leaveTypes: Array,
+    editingRequest: Object
 })
-
 const form = useForm({
     employee_id: null,
     leave_type_id: null,
@@ -28,8 +22,21 @@ const emit = defineEmits(['close', 'submit'])
 
 
 
-
-
+watch(() => props.editingRequest, (newRequest) => {
+    if (newRequest) {
+        form.employee_id = newRequest.employee_id
+        form.leave_type_id = newRequest.leave_type_id
+        form.start_date = newRequest.start_date
+        form.end_date = newRequest.end_date
+        form.reason = newRequest.reason
+    } else {
+        form.employee_id = null
+        form.leave_type_id = null
+        form.start_date = ''
+        form.end_date = ''
+        form.reason = ''
+    }
+})
 
 
 

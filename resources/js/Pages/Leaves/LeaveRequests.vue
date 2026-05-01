@@ -5,8 +5,9 @@ import { ref } from 'vue';
 import {router} from '@inertiajs/vue3';
 
 
-const showModal = ref(false)
 
+
+const showModal = ref(false)
 defineProps({
     employees: {
         type: Array,
@@ -23,14 +24,26 @@ defineProps({
 })
 
 const handleSubmit = (formData) => {
-    router.post(route('leaveRequests.store'),formData,{
+    if(editingRequest.value){
+        router.put(route('leaveRequests.update',editingRequest.value.id),formData,{
+            onSuccess:() => {
+                showModal.value=false
+                 editingRequest.value = null
+            }
+        })
+    }
+
+
+
+
+   else { router.post(route('leaveRequests.store'),formData,{
 
         onSuccess: () => {
         showModal.value = false
         
       },
     })
-    
+}
 }
 
 
@@ -40,15 +53,24 @@ const toggleDropdown = (id) => {
     activeDropdown.value = activeDropdown.value === id ? null : id
 }
 
+const editingRequest = ref(null)
 const editRequest = (request) => {
     activeDropdown.value = null
-    // Open edit modal with request data
+    editingRequest.value= request
+    showModal.value=true
 }
 
 const deleteRequest = (request) => {
     activeDropdown.value = null
     // Confirm and delete
 }
+const closeModal = () => {
+    showModal.value = false
+    editingRequest.value = null
+}
+
+
+
 </script>
 
 <template>
@@ -258,7 +280,9 @@ const deleteRequest = (request) => {
 <LeaveRequestModal :show="showModal"
                    :employees="employees"
                    :leaveTypes="leaveTypes"
-                   @close="showModal = false"
-                    @submit="handleSubmit" />
+                   
+                    @submit="handleSubmit"
+                    :editing-request="editingRequest" 
+                    @close="closeModal"/>
 </AuthenticatedLayout>
 </template>
