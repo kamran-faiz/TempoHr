@@ -2,10 +2,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import LeaveRequestModal from '@/Components/LeaveRequestModal.vue';
 import { ref } from 'vue';
+import ConfirmModal from '@/Components/ConfirmModal.vue';
 import {router} from '@inertiajs/vue3';
 
 
-
+const showConfirmModal = ref(false)
+const deletingId = ref(null)    
 
 const showModal = ref(false)
 defineProps({
@@ -62,13 +64,22 @@ const editRequest = (request) => {
 
 const deleteRequest = (request) => {
     activeDropdown.value = null
-    // Confirm and delete
+    deletingId.value = request.id
+    showConfirmModal.value = true
 }
 const closeModal = () => {
     showModal.value = false
     editingRequest.value = null
 }
 
+const confirmDelete = () => {
+    router.delete(route('leaveRequests.destroy', deletingId.value), {
+        onSuccess: () => {
+            deletingId.value = null;
+            showConfirmModal.value = false;
+        }
+    });
+}
 
 
 </script>
@@ -285,4 +296,9 @@ const closeModal = () => {
                     :editing-request="editingRequest" 
                     @close="closeModal"/>
 </AuthenticatedLayout>
+<ConfirmModal :show="showConfirmModal" 
+                @confirm="confirmDelete"
+                @close="showConfirmModal = false"
+                message="Are you sure you want to delete this leave request?"
+                title="Confirm Delete"/>
 </template>

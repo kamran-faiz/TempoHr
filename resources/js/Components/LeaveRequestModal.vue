@@ -58,7 +58,7 @@ watch(() => props.editingRequest, (newRequest) => {
 <div class="w-full max-w-xl bg-white rounded-2xl border border-[#E8E0D5] shadow-2xl overflow-hidden">
 <!-- Modal Header -->
 <div class="px-8 py-6 border-b border-[#E8E0D5] flex justify-between items-center">
-<h2 class="font-headline-md text-headline-md text-[#2D2A26]">Request Leave</h2>
+<h2 class="font-headline-md text-headline-md text-[#2D2A26]">{{  editingRequest ? 'Edit Leave Request' : 'Submit Request' }}</h2>
 <button @click="emit('close')" class="p-2 hover:bg-[#F5F0E8] rounded-full transition-colors text-stone-500">
 <span class="material-symbols-outlined">close</span>
 </button>
@@ -117,7 +117,7 @@ watch(() => props.editingRequest, (newRequest) => {
                     Cancel
                 </button>
 <button @click="emit('submit',form)" class="bg-[#F5D142] text-[#2D2A26] font-bold px-8 py-3 rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center gap-2">
-                    Submit Request
+                   {{ editingRequest ? 'Update Request' : 'Submit Request' }}
                 </button>
 </div>
 </div>
