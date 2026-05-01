@@ -27,6 +27,7 @@ const handleSubmit = (formData) => {
 
         onSuccess: () => {
         showModal.value = false
+        formData.reset()
       },
     })
 }
