@@ -15,7 +15,11 @@ defineProps({
     leaveTypes: {
         type: Array,
         default: () => []
-    }
+    },
+    leaveRequests: {
+    type: Array,
+    default: () => []
+}
 })
 
 const handleSubmit = (formData) => {
@@ -117,103 +121,30 @@ const handleSubmit = (formData) => {
 </div>
 <div class="divide-y divide-[#E8E0D5]">
 <!-- Row 1 -->
-<div class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
+<div v-for="request in leaveRequests" :key="request.id" class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
 <div class="w-1/4 flex items-center gap-4">
-<img alt="Employee Photo" class="w-10 h-10 rounded-full object-cover" data-alt="Professional headshot of a young woman with a warm smile, outdoor lighting with soft greenery background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvTxRnVtVt2c5BMkkc2zkNqLJ3aqN_pARNoIhWn79yFIcc0_5sgRQn6GS3ZtPaWzTHmrxqizvZEFRCHSSO3AF6ddAaBvyoSLvCs-Uog1VltDPgeuCcMLZQBWv9AtP5Yl4enaixY9QbehAp12vSq7llXm3cEkkjBUKPmVt40LOgMl9mpRSnrs45pNrFntehXpBrJ54c11xEi7qbPF52DmBSNdzDO9lvgLqhKIOHLQzlZGl0znqAS5JCoivatjLB4R6m1cIbb0wUhCVh"/>
+<img alt="Employee Photo" class="w-10 h-10 rounded-full object-cover" data-alt="Professional headshot of a young woman with a warm smile, outdoor lighting with soft greenery background" :src="`/storage/${request.employee.profile_image}`"/>
 <div>
-<p class="font-semibold text-on-surface">Elena Rodriguez</p>
-<p class="text-xs text-stone-500 font-label-clean">Product Designer</p>
+<p class="font-semibold text-on-surface">{{ request.employee.first_name }} {{ request.employee.last_name }}</p>
+<p class="text-xs text-stone-500 font-label-clean">{{ request.employee.designation.name }}</p>
 </div>
 </div>
 <div class="w-1/6">
-<span class="px-3 py-1 bg-blue-50 text-blue-700 text-[11px] font-bold rounded-full uppercase tracking-wider">Annual Leave</span>
+<span class="px-3 py-1 bg-blue-50 text-blue-700 text-[11px] font-bold rounded-full uppercase tracking-wider">{{request.leave_type.name}}</span>
 </div>
 <div class="w-1/4">
-<p class="text-sm text-on-surface">Oct 12 - Oct 15</p>
-<p class="text-xs text-stone-500">4 Full Days</p>
+<p class="text-sm text-on-surface">{{ request.start_date }} - {{ request.end_date }}</p>
+
 </div>
 <div class="flex-1">
-<p class="text-sm text-stone-600 italic">"Family vacation and recharging."</p>
+<p class="text-sm text-stone-600 italic">{{ request.reason }}</p>
 </div>
 <div class="w-1/6 flex justify-end items-center gap-4">
 <button class="text-[#705d00] font-semibold text-sm hover:underline decoration-2">Approve</button>
 <button class="text-stone-400 font-medium text-sm hover:text-error transition-colors">Reject</button>
 </div>
 </div>
-<!-- Row 2 -->
-<div class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
-<div class="w-1/4 flex items-center gap-4">
-<img alt="Employee Photo" class="w-10 h-10 rounded-full object-cover" data-alt="Studio portrait of a middle-aged man with glasses and creative casual attire, warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrtQgDfqwSWNjeiPYbolOTCHavwGI4QlMmntZPfJdW7rs7evVg1VrrxW1rn9fh-SJ8Ln5uRh051yfrCYiUAHwVT0EED6TRplgGjupKmSBiO84GRqXtEe56ffANpmjenzxGIPNmM3wQZBVLlxty0ZHEpB_fNyDusAcPWJQxIPFPtUgUX7o5LupM479eUJHu6R7R3IqJuXxAAKHXAV82kzuqn_bxocHDhyjt9acdM1YdmLTvjuuNyS9QpETfMjPff0gOX2E3yy54jT7E"/>
-<div>
-<p class="font-semibold text-on-surface">Marcus Chen</p>
-<p class="text-xs text-stone-500 font-label-clean">Senior Developer</p>
-</div>
-</div>
-<div class="w-1/6">
-<span class="px-3 py-1 bg-red-50 text-red-700 text-[11px] font-bold rounded-full uppercase tracking-wider">Sick Leave</span>
-</div>
-<div class="w-1/4">
-<p class="text-sm text-on-surface">Oct 09 - Oct 10</p>
-<p class="text-xs text-stone-500">2 Full Days</p>
-</div>
-<div class="flex-1">
-<p class="text-sm text-stone-600 italic">"Recovery from seasonal flu."</p>
-</div>
-<div class="w-1/6 flex justify-end items-center gap-4">
-<span class="px-3 py-1 bg-amber-50 text-amber-700 text-[11px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">schedule</span> Pending
-                                </span>
-</div>
-</div>
-<!-- Row 3 -->
-<div class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
-<div class="w-1/4 flex items-center gap-4">
-<img alt="Employee Photo" class="w-10 h-10 rounded-full object-cover" data-alt="Cinematic headshot of a woman in high-end office environment with warm morning light flares" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSVTa5fXUoYdDZdO5lfq1UjADZWd4YnJyr_rLHTkF18lj8DijjO-NJjPuOvRIcHWzlgZHi63id_h5YS1Qlm1z6GRQZmPzJlbeRFKbsHLPhKg1Bff2mdnBDj_j8-qRazXv6vho5ABOWs2cuJ5PYYlaZ-1EBdG6hS7uiXqedBCFXOYcBAVUYYtpna0h2-CgBpkEAyRtqBuZvLVp3Yw9fh3p7edti--fTLi0dnNhBssE1WBS1kNz4d4c878QX_drKlczC3NNFP60hBHj7"/>
-<div>
-<p class="font-semibold text-on-surface">Sarah Jenkins</p>
-<p class="text-xs text-stone-500 font-label-clean">Marketing Lead</p>
-</div>
-</div>
-<div class="w-1/6">
-<span class="px-3 py-1 bg-stone-100 text-stone-700 text-[11px] font-bold rounded-full uppercase tracking-wider">Personal</span>
-</div>
-<div class="w-1/4">
-<p class="text-sm text-on-surface">Oct 20 - Oct 21</p>
-<p class="text-xs text-stone-500">1.5 Days</p>
-</div>
-<div class="flex-1">
-<p class="text-sm text-stone-600 italic">"Personal commitments."</p>
-</div>
-<div class="w-1/6 flex justify-end items-center gap-4">
-<button class="text-[#705d00] font-semibold text-sm hover:underline decoration-2">Approve</button>
-<button class="text-stone-400 font-medium text-sm hover:text-error transition-colors">Reject</button>
-</div>
-</div>
-<!-- Row 4 -->
-<div class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
-<div class="w-1/4 flex items-center gap-4">
-<img alt="Employee Photo" class="w-10 h-10 rounded-full object-cover" data-alt="Modern professional portrait of a man with a beard, neutral grey background with soft diffused lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXvllkQi7lJrVGN8TfgxhXsfIew-GnkEPC3d4-hVJeK9X6KfeGUziSO1NIcus8bPqUlOQIgjGmVD-M3PF6NLV2B4NHdLpAhd4yBjbKlbQTwXrk0TDjm2GNYIaDdh1TreFv7QGYGc920EXsEB8BvOYaArpLbTnvOnqraQGJIcMWbIzOECpJ6IYJkw1wCgff4wPklAmdtNfp8n74laFWk4mUX8Dc2i8ReRS2mgVgKU0aKQHpJSV945SpX-OyHXNff1TTG9WGQwdnCV-v"/>
-<div>
-<p class="font-semibold text-on-surface">James Wilson</p>
-<p class="text-xs text-stone-500 font-label-clean">HR Specialist</p>
-</div>
-</div>
-<div class="w-1/6">
-<span class="px-3 py-1 bg-blue-50 text-blue-700 text-[11px] font-bold rounded-full uppercase tracking-wider">Annual Leave</span>
-</div>
-<div class="w-1/4">
-<p class="text-sm text-on-surface">Oct 25 - Oct 30</p>
-<p class="text-xs text-stone-500">5 Full Days</p>
-</div>
-<div class="flex-1">
-<p class="text-sm text-stone-600 italic">"Wedding attendance."</p>
-</div>
-<div class="w-1/6 flex justify-end items-center gap-4">
-<span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-[11px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">check</span> Approved
-                                </span>
-</div>
-</div>
+
 </div>
 <div class="p-6 bg-[#FAF8F5] text-center">
 <button class="text-stone-500 font-semibold text-sm hover:text-[#2D2A26] transition-colors">View All Request History</button>
