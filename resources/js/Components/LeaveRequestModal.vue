@@ -63,7 +63,7 @@ const emit = defineEmits(['close', 'submit'])
 <label class="font-label-clean text-label-clean text-stone-600">Employee</label>
 <div class="relative">
 <select v-model="form.employee_id"  class="w-full appearance-none bg-white border border-[#E8E0D5] rounded-xl px-4 py-3 pr-10 font-body-md text-on-surface focus:ring-2 focus:ring-[#F5D142] focus:border-transparent outline-none transition-all">
-<option v-for="employee in employees" :key="employee.id" :value="employee.id" >{{ employee.name }}</option>
+<option v-for="employee in employees" :key="employee.id" :value="employee.id" >{{ employee.first_name }} {{ employee.last_name }}</option>
 
 
 </select>

@@ -1,7 +1,31 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import LeaveRequestModal from '@/Components/LeaveRequestModal.vue';
+import { ref } from 'vue';
+import {router} from '@inertiajs/vue3';
 
 
+const showModal = ref(false)
+
+defineProps({
+    employees: {
+        type: Array,
+        default: () => []
+    },
+    leaveTypes: {
+        type: Array,
+        default: () => []
+    }
+})
+
+const handleSubmit = (formData) => {
+    router.post(route('leaveRequests.store'),formData,{
+
+        onSuccess: () => {
+        showModal.value = false
+      },
+    })
+}
 </script>
 
 <template>
@@ -17,7 +41,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 <h2 class="text-lg font-semibold text-[#2D2A26]">Leave Management</h2>
 </div>
-<button class="bg-[#F5D142] text-[#2D2A26] px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+<button @click="showModal = true" class="bg-[#F5D142] text-[#2D2A26] px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
         <span class="material-symbols-outlined text-sm">add</span> 
         Request Leave
     </button>
@@ -267,5 +291,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 </aside>
 </div>
 </main>
+<LeaveRequestModal :show="showModal"
+                   :employees="employees"
+                   :leaveTypes="leaveTypes"
+                   @close="showModal = false"
+                    @submit="handleSubmit" />
 </AuthenticatedLayout>
 </template>

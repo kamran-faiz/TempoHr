@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LeaveRequest;
+use App\Models\Employee;
+use App\Models\LeaveType;
+
 use Inertia\Inertia;
 
 class LeaveRequestController extends Controller
@@ -14,8 +17,13 @@ class LeaveRequestController extends Controller
     public function index()
     {
         $leaveRequest = LeaveRequest::latest()->get();
+        $employees = Employee::all();
+        $leaveTypes = LeaveType::all();
+       
           return Inertia::render('Leaves/LeaveRequests', [
-            'leaveRequests' => $leaveRequest
+            'leaveRequests' => $leaveRequest,
+            'employees' => $employees,      // ← do you have this?
+            'leaveTypes' => $leaveTypes 
         ]);
     }
 
@@ -32,7 +40,17 @@ class LeaveRequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'reason' => 'nullable|string'
+
+        ]);
+        LeaveRequest::create($validated);
+        return redirect()->back()->with('success', 'Designation created successfully.');
+
     }
 
     /**

@@ -2,13 +2,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import leaveRequest from '@/Components/LeaveRequest.vue';
+
 
 defineProps({
   employee: {
     type: Object,
     required: true
-  }
+  },
+  
 })
 
 const activeTab = ref('personal')
