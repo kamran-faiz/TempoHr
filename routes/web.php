@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('leaveTypes', LeaveTypeController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('allowanceTypes', AllowanceTypeController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('employees', EmployeeController::class)->only(['index', 'show', 'store' , 'update' , 'destroy']);
-    Route::resource('leaveRequests', LeaveRequestController::class)->only(['store','index']);
+    Route::resource('leaveRequests', LeaveRequestController::class)->only(['store','index','update','destroy']);
 });
 
 require __DIR__.'/auth.php';

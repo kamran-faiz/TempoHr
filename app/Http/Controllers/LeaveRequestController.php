@@ -49,39 +49,29 @@ class LeaveRequestController extends Controller
 
         ]);
         LeaveRequest::create($validated);
-        return redirect()->back()->with('success', 'Designation created successfully.');
+        return redirect()->back()->with('success', 'LeaveRequest created successfully.');
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, LeaveRequest $leaveRequest)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'reason' => 'nullable|string',
+        ]);
+        $leaveRequest->update($validated);
+        return redirect()->back()->with('success','LeaveRequest updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(LeaveRequest $leaveRequest)
     {
-        //
+        $leaveRequest->delete();
+        return redirect()->back()->with('success','LeaveRequest deleted successfully');
     }
 }
