@@ -74,4 +74,9 @@ class LeaveRequestController extends Controller
         $leaveRequest->delete();
         return redirect()->back()->with('success','LeaveRequest deleted successfully');
     }
+    
+        public function updateStatus(Request $request, LeaveRequest $leaveRequest) {
+    $leaveRequest->update(['status' => $request->status]);
+    return redirect()->back()->with('success', 'Status updated!');
+}
 }

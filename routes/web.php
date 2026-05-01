@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('allowanceTypes', AllowanceTypeController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('employees', EmployeeController::class)->only(['index', 'show', 'store' , 'update' , 'destroy']);
     Route::resource('leaveRequests', LeaveRequestController::class)->only(['store','index','update','destroy']);
+    Route::put('leaveRequests/{leaveRequest}/status', [LeaveRequestController::class , 'updateStatus'])->name('leaveRequests.updateStatus');
 });
 
 require __DIR__.'/auth.php';

@@ -4,13 +4,13 @@ import LeaveRequestModal from '@/Components/LeaveRequestModal.vue';
 import { ref } from 'vue';
 import ConfirmModal from '@/Components/ConfirmModal.vue';
 import {router} from '@inertiajs/vue3';
-
+import { computed } from 'vue';
 
 const showConfirmModal = ref(false)
 const deletingId = ref(null)    
 
 const showModal = ref(false)
-defineProps({
+const props = defineProps({
     employees: {
         type: Array,
         default: () => []
@@ -81,6 +81,22 @@ const confirmDelete = () => {
     });
 }
 
+const handleStatus = (request, newStatus) => {
+    router.put(route('leaveRequests.updateStatus', request.id), { status: newStatus });
+}
+const approvedCount = computed(() => {
+    return props.leaveRequests.filter(request => request.status === 'approved').length;
+});
+
+const pendingCount = computed(() => {
+    return props.leaveRequests.filter(request => request.status === 'pending').length;
+});
+
+const rejectedCount = computed(() => {
+    return props.leaveRequests.filter(request => request.status === 'rejected').length;
+});
+
+
 
 </script>
 
@@ -139,7 +155,7 @@ const confirmDelete = () => {
 <span class="font-label-caps text-on-secondary-container">PENDING</span>
 <span class="material-symbols-outlined text-primary-container">pending_actions</span>
 </div>
-<p class="font-display-num text-display-num text-on-surface">18</p>
+<p class="font-display-num text-display-num text-on-surface">{{ pendingCount }}</p>
 <p class="text-sm text-stone-500 mt-2">Requires immediate action</p>
 </div>
 <div class="bento-card p-container-padding">
@@ -147,7 +163,7 @@ const confirmDelete = () => {
 <span class="font-label-caps text-on-secondary-container">APPROVED</span>
 <span class="material-symbols-outlined text-emerald-500">check_circle</span>
 </div>
-<p class="font-display-num text-display-num text-on-surface">92</p>
+<p class="font-display-num text-display-num text-on-surface">{{ approvedCount }}</p>
 <p class="text-sm text-stone-500 mt-2">This month so far</p>
 </div>
 <div class="bento-card p-container-padding">
@@ -155,7 +171,7 @@ const confirmDelete = () => {
 <span class="font-label-caps text-on-secondary-container">REJECTED</span>
 <span class="material-symbols-outlined text-error">cancel</span>
 </div>
-<p class="font-display-num text-display-num text-on-surface">14</p>
+<p class="font-display-num text-display-num text-on-surface">{{ rejectedCount }}</p>
 <p class="text-sm text-stone-500 mt-2">Policy non-compliance</p>
 </div>
 </section>
@@ -193,11 +209,12 @@ const confirmDelete = () => {
 <div class="flex-1">
 <p class="text-sm text-stone-600 italic">{{ request.reason }}</p>
 </div>
-<div class="w-1/6 flex justify-end items-center gap-4">
-<button class="text-[#705d00] font-semibold text-sm hover:underline decoration-2">Approve</button>
+<div  class="w-1/6 flex justify-end items-center gap-4">
+    <template v-if="request.status === 'pending'">
+<button @click="handleStatus(request , 'approved')" class="text-[#705d00] font-semibold text-sm hover:underline decoration-2">Approve</button>
 <span class="text-stone-300">|</span>
-<button class="text-stone-400 font-medium text-sm hover:text-error transition-colors">Reject</button>
-
+<button @click="handleStatus(request, 'rejected')" class="text-stone-400 font-medium text-sm hover:text-error transition-colors">Reject</button>
+</template>
 <div class="relative">
     <button @click="toggleDropdown(request.id)" class="p-1">
         <span class="material-symbols-outlined">more_vert</span>
