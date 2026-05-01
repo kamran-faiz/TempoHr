@@ -27,9 +27,27 @@ const handleSubmit = (formData) => {
 
         onSuccess: () => {
         showModal.value = false
-        formData.reset()
+        
       },
     })
+    
+}
+
+
+const activeDropdown = ref(null)
+
+const toggleDropdown = (id) => {
+    activeDropdown.value = activeDropdown.value === id ? null : id
+}
+
+const editRequest = (request) => {
+    activeDropdown.value = null
+    // Open edit modal with request data
+}
+
+const deleteRequest = (request) => {
+    activeDropdown.value = null
+    // Confirm and delete
 }
 </script>
 
@@ -78,9 +96,9 @@ const handleSubmit = (formData) => {
 <span class="font-label-caps text-on-secondary-container">TOTAL REQUESTS</span>
 <span class="material-symbols-outlined text-primary">analytics</span>
 </div>
-<p class="font-display-num text-display-num text-on-surface">124</p>
+<p class="font-display-num text-display-num text-on-surface">{{leaveRequests.length }}</p>
 <p class="text-sm text-stone-500 mt-2 flex items-center gap-1">
-<span class="text-emerald-600 font-semibold">+12%</span> vs last month
+<span class="text-emerald-600 font-semibold">Requests</span>
                 </p>
 </div>
 <div class="bento-card p-container-padding">
@@ -144,7 +162,19 @@ const handleSubmit = (formData) => {
 </div>
 <div class="w-1/6 flex justify-end items-center gap-4">
 <button class="text-[#705d00] font-semibold text-sm hover:underline decoration-2">Approve</button>
+<span class="text-stone-300">|</span>
 <button class="text-stone-400 font-medium text-sm hover:text-error transition-colors">Reject</button>
+
+<div class="relative">
+    <button @click="toggleDropdown(request.id)" class="p-1">
+        <span class="material-symbols-outlined">more_vert</span>
+    </button>
+    
+    <div v-if="activeDropdown === request.id" class="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg z-10 w-32">
+        <button @click="editRequest(request)" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">Edit</button>
+        <button @click="deleteRequest(request)" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600">Delete</button>
+    </div>
+</div>
 </div>
 </div>
 
