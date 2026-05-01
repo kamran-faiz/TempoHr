@@ -21,5 +21,11 @@ body {
   color: #2D2A26;
 }
 .material-symbols-outlined {
-    font-display: optional;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    vertical-align: middle;
+    /* This prevents the "text" from showing while the font is loading */
+    font-display: block;
 }
