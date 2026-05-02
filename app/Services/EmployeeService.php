@@ -76,6 +76,7 @@ return $employee;
     public function deleteEmployee(Employee $employee): void
 {
     $employee->leaveBalances()->delete();
+    $employee->leaveRequests()->delete();
     $employee->delete();
 }
 }

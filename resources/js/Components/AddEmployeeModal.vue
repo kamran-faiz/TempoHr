@@ -139,7 +139,7 @@ const finishOnboarding = () => emit('submit')
         <option value="">Select Gender</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
-        <option value="prefer-not-to-say">Prefer not to say</option>
+        <option value="other">Prefer not to say</option>
       </select>
     </div>
     <div class="space-y-2">

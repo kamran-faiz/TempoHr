@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\LeaveRequest;
+
 class Employee extends Model
 {
     protected $fillable = [
@@ -55,5 +57,9 @@ class Employee extends Model
  public function leaveBalances()
 {
     return $this->hasMany(LeaveBalance::class);
+}
+public function leaveRequests()
+{
+    return $this->hasMany(LeaveRequest::class);
 }
 }
