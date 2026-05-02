@@ -235,6 +235,13 @@ const openEditModal = (employee) => {
   @confirm="confirmDelete"
   @close="showConfirmModal = false"
 />
-    <AddEmployeeModal :editing-employee="editingEmployee" :show="showModal" @update:show="showModal = $event" :form="form" :departments="departments" :designations="designations" :current-step="currentStep" @update:currentStep="currentStep = $event" @submit="submit"/>
+    <AddEmployeeModal :editing-employee="editingEmployee" 
+    :show="showModal" 
+    @update:show="showModal = $event" 
+    :form="form" :departments="departments" 
+    :designations="designations" 
+    :current-step="currentStep" 
+    @update:currentStep="currentStep = $event" 
+    @submit="submit"/>
   </AuthenticatedLayout>
 </template>

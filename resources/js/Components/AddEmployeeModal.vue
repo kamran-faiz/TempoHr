@@ -25,7 +25,7 @@ const props = defineProps({
   },
   editingEmployee:{
     type : Object,
-    defalut:() => [],
+    default:() => [],
   }
 })
 

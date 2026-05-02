@@ -1,18 +1,107 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import AddEmployeeModal from '@/Components/AddEmployeeModal.vue';
+import { Head,useForm,router,Link } from '@inertiajs/vue3';
 
+const showModal = ref(false)
+const editingEmployee = ref(null)
 
+const openEditModal =(employee) => {
+   currentStep.value = 1;
+  editingEmployee.value= employee;
+  form.employee_code = employee.employee_code;
+form.first_name = employee.first_name;
+form.last_name = employee.last_name;
+form.email = employee.email;
+form.phone = employee.phone;
+form.cnic = employee.cnic;
+form.date_of_birth = employee.date_of_birth;
+form.gender = employee.gender;
+form.address = employee.address;
+form.emergency_contact_name = employee.emergency_contact_name;
+form.emergency_contact_phone = employee.emergency_contact_phone;
+form.department_id = employee.department_id;
+form.designation_id = employee.designation_id;
+form.employee_type = employee.employee_type;
+form.joining_date = employee.joining_date;
+form.reporting_manager_id = employee.reporting_manager_id;
+form.status = employee.status;
+  showModal.value = true;
+  
+
+}
 defineProps({
   employee: {
     type: Object,
     required: true
   },
-  
+   departments: {
+     type : Array ,
+     default :() => [],
+  },
+  designations: {
+    type : Array ,
+    default :() => [],
+  }
+})
+const currentStep = ref(1)
+
+const form = useForm ({
+  'employee_code': '',
+  'first_name': '',
+  'last_name':'',
+  'email':'',
+  'phone':'',
+  'cnic':'',
+  'date_of_birth':'',
+  'gender':'',
+  'address':'',
+  'emergency_contact_name':'',
+  'emergency_contact_phone':'',
+  'profile_image':null,
+  'department_id':null,
+  'designation_id':null,
+  'employee_type':'full_time',
+  'joining_date':'',
+   'reporting_manager_id':null,
+   'status':'active',
+
+
 })
 
 const activeTab = ref('personal')
+const submit = () => {
+  if (editingEmployee.value) {
+    // For Update - Use POST with _method=PUT (Important for file uploads)
+    form
+      .transform((data) => ({
+        ...data,
+        _method: 'PUT',
+      }))
+      .post(route('employees.update', editingEmployee.value.id), {
+        forceFormData: true,
+        onSuccess: () => {
+          showModal.value = false;
+        },
+        onError: (errors) => {
+          console.error('Update failed with errors:', errors);
+        }
+      });
+  } else {
+    // For Create - Keep as POST
+    form.post(route('employees.store'), {
+      forceFormData: true,
+      onSuccess: () => {
+        currentStep.value = 1;
+        showModal.value = false;
+      },
+      onError: (errors) => {
+        console.error('Create failed with errors:', errors);
+      }
+    });
+  }
+};
 </script>
 
 <template>
@@ -55,7 +144,8 @@ const activeTab = ref('personal')
           </div>
         </div>
         <div class="flex gap-3 mt-4 md:mt-0">
-          <button class="px-6 py-2.5 border border-[#2D2A26] text-[#2D2A26] rounded-lg font-semibold text-sm hover:bg-[#F5F0E8] transition-all">Edit Profile</button>
+          
+          <button @click="openEditModal(employee)"  class="px-6 py-2.5 border border-[#2D2A26] text-[#2D2A26] rounded-lg font-semibold text-sm hover:bg-[#F5F0E8] transition-all">Edit Profile</button>
           <button class="px-6 py-2.5 bg-surface-container text-[#2D2A26] rounded-lg font-semibold text-sm hover:bg-surface-variant transition-all">Deactivate</button>
         </div>
         <div class="absolute top-0 right-0 w-24 h-24 bg-primary-container/10 rounded-bl-full -mr-8 -mt-8"></div>
@@ -214,6 +304,14 @@ const activeTab = ref('personal')
   </div>
 </div>
     </div>
+    <AddEmployeeModal :editing-employee="editingEmployee" 
+    :show="showModal" 
+    @update:show="showModal = $event" 
+    :form="form" :departments="departments" 
+    :designations="designations" 
+    :current-step="currentStep" 
+    @update:currentStep="currentStep = $event" 
+    @submit="submit"/>
   </AuthenticatedLayout>
 </template>
 
