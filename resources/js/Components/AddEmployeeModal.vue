@@ -33,7 +33,7 @@ const steps = [
    { title: 'Personal Info' },
   { title: 'Employment' },
   { title: 'Address & Emergency' },
-  { title: 'Documents' }
+  { title: 'profile photo' }
 ]
 
 const emit = defineEmits(['update:currentStep', 'update:show','submit'])
@@ -234,23 +234,8 @@ const finishOnboarding = () => emit('submit')
       <p class="text-xs text-stone-500 mt-1">Clear headshot (Max 5MB)</p>
       <button @click="$refs.photoInput.click()" class="mt-6 px-6 py-2 text-sm border border-stone-700 rounded-full hover:bg-stone-50">Browse</button>
     </div>
-    <div class="border border-dashed border-[#E8E0D5] rounded-2xl p-8 text-center">
-      <span class="material-symbols-outlined text-5xl text-stone-300 mb-4">badge</span>
-      <h4 class="font-medium">CNIC Front</h4>
-      <button class="mt-6 px-6 py-2 text-sm border border-stone-700 rounded-full hover:bg-stone-50">Upload</button>
-    </div>
-    <div class="border border-dashed border-[#E8E0D5] rounded-2xl p-8 text-center">
-      <span class="material-symbols-outlined text-5xl text-stone-300 mb-4">security</span>
-      <h4 class="font-medium">CNIC Back</h4>
-      <button class="mt-6 px-6 py-2 text-sm border border-stone-700 rounded-full hover:bg-stone-50">Upload</button>
-    </div>
-  </div>
-  <div class="mt-10 border border-dashed border-[#E8E0D5] rounded-2xl p-10 text-center">
-    <span class="material-symbols-outlined text-6xl text-stone-300 mb-4">drive_folder_upload</span>
-    <p class="font-medium">Additional Documents</p>
-    <p class="text-sm text-stone-500 mt-1">Education certificates, experience letters, etc.</p>
-    <button class="mt-6 px-8 py-3 bg-white border border-stone-700 rounded-full text-sm font-medium">Select Files</button>
-  </div>
+  
+</div>
 </div>
 
         <!-- Footer Actions -->

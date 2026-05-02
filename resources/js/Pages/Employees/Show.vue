@@ -66,7 +66,7 @@ const activeTab = ref('personal')
         <button @click="activeTab = 'personal'" :class="activeTab === 'personal' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Personal Info</button>
         <button @click="activeTab = 'job'" :class="activeTab === 'job' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Job Details</button>
         <button @click="activeTab = 'leave'" :class="activeTab === 'leave' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Leave History</button>
-        <button @click="activeTab = 'documents'" :class="activeTab === 'documents' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Documents</button>
+        <button @click="activeTab = 'documents'" :class="activeTab === 'documents' ? 'text-[#2D2A26] active-tab-indicator' : 'text-[#2D2A26]/40'" class="font-semibold text-sm pb-4">Profile Photo</button>
       </nav>
 
       <!-- Content Grid -->
@@ -194,6 +194,24 @@ const activeTab = ref('personal')
     </div>
   </div>
 
+</div>
+<!-- Profile Photo Tab -->
+<div v-if="activeTab === 'documents'" class="flex justify-center items-center min-h-[400px]">
+  <div class="bg-white border border-[#E8E0D5] rounded-xl p-12 text-center max-w-md w-full">
+    <div class="w-40 h-40 rounded-full overflow-hidden mx-auto mb-6">
+      <img 
+        v-if="employee.profile_image" 
+        :src="`/storage/${employee.profile_image}`" 
+        class="w-full h-full object-cover"
+      />
+      <div v-else class="w-full h-full bg-secondary-container flex items-center justify-center text-4xl font-bold">
+        {{ employee.first_name[0] }}{{ employee.last_name[0] }}
+      </div>
+    </div>
+    <h3 class="font-semibold text-xl">Profile Photo</h3>
+    <p class="text-sm text-stone-500 mt-2">Current profile image</p>
+    <p class="text-xs text-stone-400 mt-4">To change photo, edit the employee profile</p>
+  </div>
 </div>
     </div>
   </AuthenticatedLayout>
