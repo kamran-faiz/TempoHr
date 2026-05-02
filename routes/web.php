@@ -10,6 +10,7 @@ use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\AllowanceTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\EmployeeSalaryController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('leaveRequests', LeaveRequestController::class)->only(['store','index','update','destroy']);
     Route::put('leaveRequests/{leaveRequest}/status', [LeaveRequestController::class , 'updateStatus'])->name('leaveRequests.updateStatus');
     Route::patch('employees/{employee}/status', [EmployeeController::class , 'toggleStatus'])->name('EmployeeStatus.patch');
+    Route::resource('employeeSalary' , EmployeeSalaryController::class)->only(['index','store','update','destroy']);
 });
 
 require __DIR__.'/auth.php';

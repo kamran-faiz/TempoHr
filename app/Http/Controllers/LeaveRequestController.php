@@ -77,6 +77,20 @@ class LeaveRequestController extends Controller
     
         public function updateStatus(Request $request, LeaveRequest $leaveRequest) {
     $leaveRequest->update(['status' => $request->status]);
+    if ($request->status === 'approved') {
+    $days = \Carbon\Carbon::parse($leaveRequest->start_date)
+    ->diffInDays($leaveRequest->end_date) + 1;
+    $balance = \App\Models\LeaveBalance::where('employee_id', $leaveRequest->employee_id)
+    ->where('leave_type_id', $leaveRequest->leave_type_id)
+    ->where('year', now()->year)
+    ->first();
+    if ($balance) {
+    $balance->update([
+        'used_days' => $balance->used_days + $days,
+        'remaining_days' => $balance->remaining_days - $days,
+    ]);
+}
+}
     return redirect()->back()->with('success', 'Status updated!');
 }
 }

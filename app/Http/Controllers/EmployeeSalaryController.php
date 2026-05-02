@@ -97,8 +97,10 @@ class EmployeeSalaryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(EmployeeSalary $employeesalary)
     {
-        //
+        $employeesalary->allowances()->delete();
+        $employeesalary->delete();
+        return redirect()->back()->with('success', 'EmployeeSalary deleted successfully.');
     }
 }
