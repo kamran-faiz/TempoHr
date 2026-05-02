@@ -102,6 +102,14 @@ const submit = () => {
     });
   }
 };
+
+const updateStatus = (employee) => {
+  router.patch(route('EmployeeStatus.patch', employee.id),{
+    onSuccess : () => {
+
+    }
+  })
+}
 </script>
 
 <template>
@@ -146,7 +154,7 @@ const submit = () => {
         <div class="flex gap-3 mt-4 md:mt-0">
           
           <button @click="openEditModal(employee)"  class="px-6 py-2.5 border border-[#2D2A26] text-[#2D2A26] rounded-lg font-semibold text-sm hover:bg-[#F5F0E8] transition-all">Edit Profile</button>
-          <button class="px-6 py-2.5 bg-surface-container text-[#2D2A26] rounded-lg font-semibold text-sm hover:bg-surface-variant transition-all">Deactivate</button>
+          <button  @click="updateStatus(employee)" class="px-6 py-2.5 bg-surface-container text-[#2D2A26] rounded-lg font-semibold text-sm hover:bg-surface-variant transition-all">{{ employee.status === 'active' ? 'Deactivate' : 'Activate' }}</button>
         </div>
         <div class="absolute top-0 right-0 w-24 h-24 bg-primary-container/10 rounded-bl-full -mr-8 -mt-8"></div>
       </section>

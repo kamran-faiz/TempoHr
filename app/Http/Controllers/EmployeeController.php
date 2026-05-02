@@ -87,5 +87,13 @@ class EmployeeController extends Controller
     return redirect()->back()->with('success', 'Employee deleted successfully');
 }
 
+public function toggleStatus(Employee $employee)
+{
+    $employee->update([
+    'status' => $employee->status === 'active' ? 'inactive' : 'active'
+]);
+ return redirect()->back()->with('success', 'Status updated!');
+
+}
     
 }

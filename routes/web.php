@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees', EmployeeController::class)->only(['index', 'show', 'store' , 'update' , 'destroy']);
     Route::resource('leaveRequests', LeaveRequestController::class)->only(['store','index','update','destroy']);
     Route::put('leaveRequests/{leaveRequest}/status', [LeaveRequestController::class , 'updateStatus'])->name('leaveRequests.updateStatus');
+    Route::patch('employees/{employee}/status', [EmployeeController::class , 'toggleStatus'])->name('EmployeeStatus.patch');
 });
 
 require __DIR__.'/auth.php';
