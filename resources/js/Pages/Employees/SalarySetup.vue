@@ -24,6 +24,10 @@ const form = useForm({
   'effective_date' :'',
   'allowances' : []
 })
+
+const submitSalary = () => {
+  form.post(route('employee-salary.store'))  // Match your route
+}
 </script>
 
 <template>
@@ -41,7 +45,12 @@ const form = useForm({
             <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
           </div>
           <div>
-            <h2 class="font-headline-md text-stone-900"><select></select></h2>
+            <select v-model="form.employee_id" class="font-headline-md text-stone-900 border rounded-lg px-3 py-2">
+  <option value="">Select Employee</option>
+  <option v-for="emp in employees" :key="emp.id" :value="emp.id">
+    {{ emp.first_name }} {{ emp.last_name }}
+  </option>
+</select>
             <p class="font-label-clean text-stone-500 flex items-center gap-2">
               <span class="material-symbols-outlined text-sm">badge</span>
               Designation
@@ -136,7 +145,7 @@ const form = useForm({
             <span class="font-label-caps text-stone-400 uppercase">Total Monthly Gross</span>
             <p class="font-display-num text-3xl text-stone-900">PKR 0.00</p>
           </div>
-          <button class="bg-[#F5D142] text-stone-900 px-12 py-4 rounded-xl font-headline-md hover:brightness-95 active:scale-98 transition-all flex items-center gap-3 shadow-lg shadow-primary-container/20">
+          <button @click="submitSalary" class="bg-[#F5D142] text-stone-900 px-12 py-4 rounded-xl font-headline-md hover:brightness-95 active:scale-98 transition-all flex items-center gap-3 shadow-lg shadow-primary-container/20">
             Save Salary Setup
             <span class="material-symbols-outlined">check_circle</span>
           </button>

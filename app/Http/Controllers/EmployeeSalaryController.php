@@ -17,10 +17,11 @@ class EmployeeSalaryController extends Controller
     {
         $employeeSalary = EmployeeSalary::with('allowance')->latest()->get();
         $allowanceTypes = AllowanceType::all();
-        'employees' => \App\Models\Employee::all(),
+        
         return Inertia::render('Employee/SalarySetup',[
           'employeeSalary' =>   $employeeSalary,
           'allowanceTypes'  => $allowanceTypes,
+          'employees' => \App\Models\Employee::all(),
         ]);
 
     }
