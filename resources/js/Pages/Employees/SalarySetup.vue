@@ -8,14 +8,21 @@ defineProps({
     type: Object,
     required: true
   },
-  allowanceType:{
-    type:Object,
+  allowanceTypes:{
+    type:Array,
     default :() => [],
   },
   currentSalary:{
     type:Object,
     required: true
   }
+})
+
+const form = useForm({
+  'employee_id' : '',
+  'basic_salary' : '',
+  'effective_date' :'',
+  'allowances' : []
 })
 </script>
 
