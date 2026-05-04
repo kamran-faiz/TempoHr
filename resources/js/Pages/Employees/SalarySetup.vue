@@ -1,5 +1,22 @@
 <script setup>
-// Static layout only - no functionality yet
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { ref } from 'vue';
+import { Head,useForm,router,Link } from '@inertiajs/vue3';
+
+defineProps({
+  employee: {
+    type: Object,
+    required: true
+  },
+  allowanceType:{
+    type:Object,
+    default :() => [],
+  },
+  currentSalary:{
+    type:Object,
+    required: true
+  }
+})
 </script>
 
 <template>
@@ -8,31 +25,29 @@
     <div class="p-container-padding max-w-5xl mx-auto space-y-bento-gutter">
 
       <!-- Employee Snapshot Card -->
-      <section class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl flex items-center justify-between">
+      <section class="bg-white border border-[#E8E0D5] p-6 rounded-xl flex items-center justify-between">
         <div class="flex items-center gap-6">
           <div class="relative">
-            <div class="w-20 h-20 rounded-full bg-surface-container border-2 border-primary-container flex items-center justify-center">
-              <span class="material-symbols-outlined text-on-surface-variant text-4xl">person</span>
+            <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-primary-container bg-secondary-container flex items-center justify-center text-2xl font-bold text-[#2D2A26]">
+              Employee
             </div>
             <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
           </div>
           <div>
-            <h2 class="text-headline-md font-epilogue text-on-surface">Marcus Thorne</h2>
-            <p class="text-label-caps font-manrope text-on-surface-variant flex items-center gap-2">
+            <h2 class="font-headline-md text-stone-900">Employee Name</h2>
+            <p class="font-label-clean text-stone-500 flex items-center gap-2">
               <span class="material-symbols-outlined text-sm">badge</span>
-              Senior Product Designer
+              Designation
             </p>
-            <p class="text-label-caps font-manrope text-on-surface-variant flex items-center gap-2">
+            <p class="font-label-clean text-stone-400 flex items-center gap-2">
               <span class="material-symbols-outlined text-sm">lan</span>
-              Product Design Department
+              Department
             </p>
           </div>
         </div>
         <div class="flex gap-3">
-          <button class="px-4 py-2 border border-outline-variant rounded-lg font-manrope text-on-surface hover:bg-surface-container-low transition-colors">
-            View Profile
-          </button>
-          <button class="px-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-manrope text-on-surface hover:bg-surface-container transition-colors flex items-center gap-2">
+          <button class="px-4 py-2 border border-stone-200 rounded-lg font-label-clean hover:bg-stone-50 transition-colors">View Profile</button>
+          <button class="px-4 py-2 bg-stone-50 border border-stone-200 rounded-lg font-label-clean hover:bg-stone-100 transition-colors flex items-center gap-2">
             <span class="material-symbols-outlined text-sm">history</span>
             History
           </button>
@@ -40,137 +55,93 @@
       </section>
 
       <!-- Main Setup Form Card -->
-      <section class="bg-surface-container-lowest border border-outline-variant p-container-padding rounded-xl">
-        
-        <!-- Section Header -->
+      <section class="bg-white border border-[#E8E0D5] p-container-padding rounded-xl">
         <div class="flex justify-between items-center mb-8">
           <div>
-            <span class="text-label-caps font-manrope text-on-surface-variant">FINANCIAL CONFIGURATION</span>
-            <h3 class="text-headline-md font-epilogue text-on-surface">Salary Structure</h3>
+            <span class="font-label-caps text-stone-400 uppercase">Financial Configuration</span>
+            <h3 class="font-headline-md text-stone-900">Salary Structure</h3>
           </div>
-          <span class="material-symbols-outlined text-on-surface-variant">account_balance_wallet</span>
+          <span class="material-symbols-outlined text-stone-300 scale-125">account_balance_wallet</span>
         </div>
 
-        <!-- Basic Salary + Effective Date -->
-        <div class="grid grid-cols-2 gap-8 mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
           <div class="space-y-2">
-            <label class="text-label-caps font-manrope text-on-surface-variant block">BASIC SALARY</label>
+            <label class="font-label-clean text-stone-600 block">Basic Salary</label>
             <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">$</span>
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">PKR</span>
               <input
-                class="w-full pl-8 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container focus:border-primary-container outline-none transition-all font-epilogue text-xl"
+                type="number"
                 placeholder="0.00"
-                type="text"
-                value="8,500.00"
+                class="w-full pl-14 pr-4 py-3 bg-white border border-[#E8E0D5] rounded-lg focus:ring-2 focus:ring-[#F5D142] focus:border-[#F5D142] outline-none transition-all font-display-num text-xl"
               />
             </div>
-            <p class="text-xs font-manrope text-on-surface-variant">Standard monthly basic compensation before deductions.</p>
+            <p class="text-[11px] text-stone-400 font-label-clean">Standard monthly basic compensation before deductions.</p>
           </div>
           <div class="space-y-2">
-            <label class="text-label-caps font-manrope text-on-surface-variant block">EFFECTIVE DATE</label>
+            <label class="font-label-clean text-stone-600 block">Effective Date</label>
             <input
-              class="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container focus:border-primary-container outline-none transition-all font-manrope h-[58px]"
               type="date"
-              value="2023-11-01"
+              class="w-full px-4 py-3 bg-white border border-[#E8E0D5] rounded-lg focus:ring-2 focus:ring-[#F5D142] focus:border-[#F5D142] outline-none transition-all font-body-md h-[58px]"
             />
-            <p class="text-xs font-manrope text-on-surface-variant">Date from which this salary setup becomes active.</p>
+            <p class="text-[11px] text-stone-400 font-label-clean">Date from which this salary setup becomes active.</p>
           </div>
         </div>
 
         <!-- Allowances Section -->
-        <div class="border-t border-outline-variant pt-8">
+        <div class="border-t border-[#E8E0D5] pt-8">
           <div class="flex justify-between items-center mb-6">
-            <h4 class="text-headline-md font-epilogue text-on-surface">Allowances & Benefits</h4>
-            <button class="flex items-center gap-2 px-4 py-2 border border-on-surface rounded-lg font-manrope text-on-surface hover:bg-surface-container-low transition-all">
+            <h4 class="font-headline-md text-stone-900 text-lg">Allowances & Benefits</h4>
+            <button class="flex items-center gap-2 px-4 py-2 border border-stone-900 rounded-lg font-label-clean text-stone-900 hover:bg-stone-50 transition-all">
               <span class="material-symbols-outlined text-sm">add</span>
               Add Allowance
             </button>
           </div>
 
           <div class="space-y-4">
-
-            <!-- Allowance Row 1 -->
-            <div class="flex items-start gap-4 p-4 rounded-xl border border-dashed border-outline-variant bg-surface-container-low">
-              <div class="w-1/3 space-y-1">
-                <label class="text-label-caps font-manrope text-on-surface-variant block">TYPE</label>
-                <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-manrope outline-none focus:border-primary-container">
-                  <option>Housing Allowance</option>
-                  <option selected>Transport Allowance</option>
-                  <option>Medical Allowance</option>
-                  <option>Education Grant</option>
+            <!-- Allowance Row -->
+            <div class="flex flex-wrap md:flex-nowrap items-start gap-4 p-4 rounded-xl border border-dashed border-[#E8E0D5] bg-stone-50/50">
+              <div class="w-full md:w-1/3 space-y-1">
+                <label class="font-label-caps text-[10px] text-stone-400 uppercase">Type</label>
+                <select class="w-full px-4 py-2 bg-white border border-[#E8E0D5] rounded-lg font-label-clean outline-none focus:border-[#F5D142]">
+                  <option value="">Select Allowance Type</option>
                 </select>
               </div>
-              <div class="w-1/4 space-y-1">
-                <label class="text-label-caps font-manrope text-on-surface-variant block">VALUE TYPE</label>
-                <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-manrope outline-none focus:border-primary-container">
-                  <option>Fixed Amount ($)</option>
-                  <option selected>Percentage (%)</option>
-                </select>
-              </div>
-              <div class="w-1/4 space-y-1">
-                <label class="text-label-caps font-manrope text-on-surface-variant block">VALUE</label>
-                <input class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-manrope outline-none focus:border-primary-container" type="text" value="15"/>
-                <p class="text-xs text-primary font-manrope mt-1">Calculated: $1,275.00 (15% of basic)</p>
+              <div class="w-full md:w-1/4 space-y-1">
+                <label class="font-label-caps text-[10px] text-stone-400 uppercase">Value</label>
+                <input
+                  type="number"
+                  placeholder="0.00"
+                  class="w-full px-4 py-2 bg-white border border-[#E8E0D5] rounded-lg font-label-clean outline-none focus:border-[#F5D142]"
+                />
               </div>
               <div class="pt-6">
-                <button class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-all">
+                <button class="p-2 text-stone-400 hover:text-error hover:bg-error-container rounded-lg transition-all">
                   <span class="material-symbols-outlined">delete</span>
                 </button>
               </div>
             </div>
-
-            <!-- Allowance Row 2 -->
-            <div class="flex items-start gap-4 p-4 rounded-xl border border-dashed border-outline-variant bg-surface-container-low">
-              <div class="w-1/3 space-y-1">
-                <label class="text-label-caps font-manrope text-on-surface-variant block">TYPE</label>
-                <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-manrope outline-none focus:border-primary-container">
-                  <option>Housing Allowance</option>
-                  <option>Transport Allowance</option>
-                  <option selected>Medical Allowance</option>
-                  <option>Education Grant</option>
-                </select>
-              </div>
-              <div class="w-1/4 space-y-1">
-                <label class="text-label-caps font-manrope text-on-surface-variant block">VALUE TYPE</label>
-                <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-manrope outline-none focus:border-primary-container">
-                  <option selected>Fixed Amount ($)</option>
-                  <option>Percentage (%)</option>
-                </select>
-              </div>
-              <div class="w-1/4 space-y-1">
-                <label class="text-label-caps font-manrope text-on-surface-variant block">VALUE</label>
-                <input class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-manrope outline-none focus:border-primary-container" type="text" value="450.00"/>
-              </div>
-              <div class="pt-6">
-                <button class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-all">
-                  <span class="material-symbols-outlined">delete</span>
-                </button>
-              </div>
-            </div>
-
           </div>
         </div>
 
-        <!-- Total + Save -->
-        <div class="mt-12 flex items-center justify-between border-t border-outline-variant pt-8">
+        <!-- Footer -->
+        <div class="mt-12 flex items-center justify-between border-t border-[#E8E0D5] pt-8">
           <div class="space-y-1">
-            <span class="text-label-caps font-manrope text-on-surface-variant">TOTAL MONTHLY GROSS</span>
-            <p class="text-display-num font-epilogue text-on-surface">$10,225.00</p>
+            <span class="font-label-caps text-stone-400 uppercase">Total Monthly Gross</span>
+            <p class="font-display-num text-3xl text-stone-900">PKR 0.00</p>
           </div>
-          <button class="bg-primary-container text-on-primary-container px-12 py-4 rounded-xl font-epilogue font-bold hover:opacity-90 active:scale-95 transition-all flex items-center gap-3">
+          <button class="bg-[#F5D142] text-stone-900 px-12 py-4 rounded-xl font-headline-md hover:brightness-95 active:scale-98 transition-all flex items-center gap-3 shadow-lg shadow-primary-container/20">
             Save Salary Setup
             <span class="material-symbols-outlined">check_circle</span>
           </button>
         </div>
-
       </section>
 
-      <!-- Policy Note -->
-      <div class="bg-surface-container border border-outline-variant p-6 rounded-xl flex gap-4 items-start">
+      <!-- Bottom Note -->
+      <div class="bg-surface-container border border-[#E8E0D5] p-6 rounded-xl flex gap-4 items-start">
         <span class="material-symbols-outlined text-primary">info</span>
         <div class="space-y-1">
-          <p class="font-manrope font-bold text-on-surface">Policy Compliance Check</p>
-          <p class="text-sm font-manrope text-on-surface-variant">The current setup follows the 'Senior Management' pay scale guidelines. Any deviation above 20% will require VP-level approval before the next payroll cycle runs.</p>
+          <p class="font-label-clean text-stone-700 font-bold">Policy Compliance Check</p>
+          <p class="text-sm text-stone-500">Salary setup will be effective from the date specified above and will apply to the next payroll cycle.</p>
         </div>
       </div>
 
