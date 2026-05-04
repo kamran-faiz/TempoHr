@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::put('leaveRequests/{leaveRequest}/status', [LeaveRequestController::class , 'updateStatus'])->name('leaveRequests.updateStatus');
     Route::patch('employees/{employee}/status', [EmployeeController::class , 'toggleStatus'])->name('EmployeeStatus.patch');
     Route::resource('employeeSalary' , EmployeeSalaryController::class)->only(['index','store','update','destroy']);
-    Route::resource('employee-salary', EmployeeSalaryController::class);
+    
 });
 
 require __DIR__.'/auth.php';

@@ -28,6 +28,21 @@ const form = useForm({
 const submitSalary = () => {
   form.post(route('employee-salary.store'))  // Match your route
 }
+
+const getEmployeeName = (id) => {
+  const emp = employees.value.find(e => e.id === id)
+  return emp ? `${emp.first_name} ${emp.last_name}` : ''
+}
+
+const getEmployeeDesignation = (id) => {
+  const emp = employees.value.find(e => e.id === id)
+  return emp?.designation?.name || ''
+}
+
+const getEmployeeDepartment = (id) => {
+  const emp = employees.value.find(e => e.id === id)
+  return emp?.department?.name || ''
+}
 </script>
 
 <template>
@@ -35,40 +50,46 @@ const submitSalary = () => {
   <AuthenticatedLayout pageTitle="Salary Setup">
     <div class="p-container-padding max-w-5xl mx-auto space-y-bento-gutter">
 
-      <!-- Employee Snapshot Card -->
-      <section class="bg-white border border-[#E8E0D5] p-6 rounded-xl flex items-center justify-between">
-        <div class="flex items-center gap-6">
-          <div class="relative">
-            <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-primary-container bg-secondary-container flex items-center justify-center text-2xl font-bold text-[#2D2A26]">
-              Employee
-            </div>
-            <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
-          </div>
-          <div>
-            <select v-model="form.employee_id" class="font-headline-md text-stone-900 border rounded-lg px-3 py-2">
-  <option value="">Select Employee</option>
-  <option v-for="emp in employees" :key="emp.id" :value="emp.id">
-    {{ emp.first_name }} {{ emp.last_name }}
-  </option>
-</select>
-            <p class="font-label-clean text-stone-500 flex items-center gap-2">
-              <span class="material-symbols-outlined text-sm">badge</span>
-              Designation
-            </p>
-            <p class="font-label-clean text-stone-400 flex items-center gap-2">
-              <span class="material-symbols-outlined text-sm">lan</span>
-              Department
-            </p>
-          </div>
-        </div>
-        <div class="flex gap-3">
-          <button class="px-4 py-2 border border-stone-200 rounded-lg font-label-clean hover:bg-stone-50 transition-colors">View Profile</button>
-          <button class="px-4 py-2 bg-stone-50 border border-stone-200 rounded-lg font-label-clean hover:bg-stone-100 transition-colors flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">history</span>
-            History
-          </button>
-        </div>
-      </section>
+    <!-- Employee Selection Dropdown -->
+<div class="mb-6">
+  <label class="block text-sm font-medium text-stone-700 mb-2">Select Employee</label>
+  <select v-model="form.employee_id" class="w-full border border-[#E8E0D5] rounded-lg px-4 py-3 bg-white">
+    <option value="">-- Select Employee --</option>
+    <option v-for="emp in employees" :key="emp.id" :value="emp.id">
+      {{ emp.first_name }} {{ emp.last_name }}
+    </option>
+  </select>
+</div>
+
+<!-- Employee Snapshot Card (shows selected employee) -->
+<section class="bg-white border border-[#E8E0D5] p-6 rounded-xl flex items-center justify-between">
+  <div class="flex items-center gap-6">
+    <div class="relative">
+      <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-primary-container bg-secondary-container flex items-center justify-center text-2xl font-bold text-[#2D2A26]">
+        {{ form.employee_id ? getEmployeeName(form.employee_id).charAt(0) : '?' }}
+      </div>
+      <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
+    </div>
+    <div>
+      <h2 class="font-headline-md text-stone-900">{{ getEmployeeName(form.employee_id) || 'No Employee Selected' }}</h2>
+      <p class="font-label-clean text-stone-500 flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">badge</span>
+        {{ getEmployeeDesignation(form.employee_id) || '—' }}
+      </p>
+      <p class="font-label-clean text-stone-400 flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">lan</span>
+        {{ getEmployeeDepartment(form.employee_id) || '—' }}
+      </p>
+    </div>
+  </div>
+  <div class="flex gap-3">
+    <button class="px-4 py-2 border border-stone-200 rounded-lg font-label-clean hover:bg-stone-50 transition-colors">View Profile</button>
+    <button class="px-4 py-2 bg-stone-50 border border-stone-200 rounded-lg font-label-clean hover:bg-stone-100 transition-colors flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">history</span>
+      History
+    </button>
+  </div>
+</section>
 
       <!-- Main Setup Form Card -->
       <section class="bg-white border border-[#E8E0D5] p-container-padding rounded-xl">

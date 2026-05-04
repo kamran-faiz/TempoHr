@@ -7,6 +7,7 @@ use App\Models\EmployeeSalary;
 use App\Models\AllowanceType;
 use App\Models\EmployeeAllowance;
 use App\Models\Employee;
+use Inertia\Inertia;
 
 class EmployeeSalaryController extends Controller
 {
@@ -18,7 +19,7 @@ class EmployeeSalaryController extends Controller
         $employeeSalary = EmployeeSalary::with('allowance')->latest()->get();
         $allowanceTypes = AllowanceType::all();
         
-        return Inertia::render('Employee/SalarySetup',[
+        return Inertia::render('Employees/SalarySetup',[
           'employeeSalary' =>   $employeeSalary,
           'allowanceTypes'  => $allowanceTypes,
           'employees' => \App\Models\Employee::all(),
