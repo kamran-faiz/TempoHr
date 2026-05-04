@@ -4,10 +4,10 @@ import { ref } from 'vue';
 import { Head,useForm,router,Link } from '@inertiajs/vue3';
 
 defineProps({
-  employee: {
-    type: Object,
-    required: true
-  },
+  employees: {
+  type: Array,
+  default: () => []
+},
   allowanceTypes:{
     type:Array,
     default :() => [],
@@ -41,7 +41,7 @@ const form = useForm({
             <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
           </div>
           <div>
-            <h2 class="font-headline-md text-stone-900">Employee Name</h2>
+            <h2 class="font-headline-md text-stone-900"><select></select></h2>
             <p class="font-label-clean text-stone-500 flex items-center gap-2">
               <span class="material-symbols-outlined text-sm">badge</span>
               Designation
@@ -76,7 +76,7 @@ const form = useForm({
             <label class="font-label-clean text-stone-600 block">Basic Salary</label>
             <div class="relative">
               <span class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">PKR</span>
-              <input
+              <input v-model="form.basic_salary"
                 type="number"
                 placeholder="0.00"
                 class="w-full pl-14 pr-4 py-3 bg-white border border-[#E8E0D5] rounded-lg focus:ring-2 focus:ring-[#F5D142] focus:border-[#F5D142] outline-none transition-all font-display-num text-xl"
@@ -86,7 +86,7 @@ const form = useForm({
           </div>
           <div class="space-y-2">
             <label class="font-label-clean text-stone-600 block">Effective Date</label>
-            <input
+            <input v-model="form.effective_date"
               type="date"
               class="w-full px-4 py-3 bg-white border border-[#E8E0D5] rounded-lg focus:ring-2 focus:ring-[#F5D142] focus:border-[#F5D142] outline-none transition-all font-body-md h-[58px]"
             />
@@ -115,7 +115,7 @@ const form = useForm({
               </div>
               <div class="w-full md:w-1/4 space-y-1">
                 <label class="font-label-caps text-[10px] text-stone-400 uppercase">Value</label>
-                <input
+                <input v-model="form.allowances"
                   type="number"
                   placeholder="0.00"
                   class="w-full px-4 py-2 bg-white border border-[#E8E0D5] rounded-lg font-label-clean outline-none focus:border-[#F5D142]"
