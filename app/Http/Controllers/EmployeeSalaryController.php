@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\EmployeeSalary;
+use App\Models\AllowanceType;
+use App\Models\EmployeeAllowance;
 
 class EmployeeSalaryController extends Controller
 {
@@ -15,7 +18,7 @@ class EmployeeSalaryController extends Controller
         $allowanceTypes = AllowanceType::all();
         return Inertia::render('Employee/SalarySetup',[
           'employeeSalary' =>   $employeeSalary,
-          'allowanceTypes'  => $allowanceType,
+          'allowanceTypes'  => $allowanceTypes,
         ]);
 
     }
