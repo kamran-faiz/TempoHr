@@ -11,122 +11,135 @@ use Carbon\Carbon;
 class PayrollController extends Controller
 {
     /**
-     * Show Run Payroll page
+     * Show payroll index page (list of processed payrolls)
      */
     public function index()
     {
-        $employees = Employee::with(['designation', 'department'])->get();
+        $payrolls = Payroll::with('employee.designation', 'employee.department')
+            ->latest()
+            ->paginate(20);
+        
+        $totalAmount = $payrolls->sum('gross_salary');
+        $totalEmployees = $payrolls->count();
+        $pendingCount = Payroll::where('status', 'draft')->count();
+        
         $months = [
             1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
             5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
             9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
         ];
-        $currentYear = Carbon::now()->year;
         
-        return Inertia::render('Payroll/RunPayroll', [
-            'employees' => $employees,
+        return Inertia::render('Payroll/Index', [
+            'payrolls' => $payrolls,
+            'totalAmount' => $totalAmount,
+            'totalEmployees' => $totalEmployees,
+            'pendingCount' => $pendingCount,
             'months' => $months,
-            'currentYear' => $currentYear,
+            'currentYear' => Carbon::now()->year,
         ]);
     }
 
     /**
-     * Process payroll for selected month/year
+     * Show generate payroll page
      */
-    public function store(Request $request)
+    public function generate()
+    {
+        $employees = Employee::with(['designation', 'department', 'employeeSalary.allowances'])
+            ->where('status', 'active')
+            ->get();
+        
+        $months = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+        ];
+        
+        return Inertia::render('Payroll/Generate', [
+            'employees' => $employees,
+            'months' => $months,
+            'currentYear' => Carbon::now()->year,
+        ]);
+    }
+
+    /**
+     * Process payroll generation
+     */
+    public function process(Request $request)
     {
         $validated = $request->validate([
             'month' => 'required|integer|between:1,12',
-            'year' => 'required|integer|min:2000|max:2100',
+            'year' => 'required|integer',
+            'employees' => 'required|array',
+            'employees.*.id' => 'exists:employees,id',
+            'employees.*.basic_salary' => 'numeric',
+            'employees.*.allowances' => 'numeric',
+            'employees.*.gross_salary' => 'numeric',
         ]);
-
+        
         $month = $validated['month'];
         $year = $validated['year'];
-
+        
         // Check if payroll already processed for this month/year
         $existing = Payroll::where('month', $month)->where('year', $year)->first();
         if ($existing) {
             return redirect()->back()->with('error', 'Payroll for this month already processed.');
         }
-
-        $employees = Employee::with(['employeeSalary.allowances'])->where('status', 'active')->get();
-        $payrolls = [];
-
-        foreach ($employees as $employee) {
-            $salary = $employee->employeeSalary()->latest()->first();
-            
-            if ($salary) {
-                $basicSalary = $salary->basic_salary;
-                $allowancesTotal = $salary->allowances()->sum('value');
-                $grossSalary = $basicSalary + $allowancesTotal;
-
-                $payrolls[] = Payroll::create([
-                    'employee_id' => $employee->id,
-                    'month' => $month,
-                    'year' => $year,
-                    'basic_salary' => $basicSalary,
-                    'allowances_total' => $allowancesTotal,
-                    'gross_salary' => $grossSalary,
-                    'status' => 'processed',
-                    'processed_at' => now(),
-                ]);
-            }
+        
+        $count = 0;
+        foreach ($validated['employees'] as $employeeData) {
+            Payroll::create([
+                'employee_id' => $employeeData['id'],
+                'month' => $month,
+                'year' => $year,
+                'basic_salary' => $employeeData['basic_salary'],
+                'allowances_total' => $employeeData['allowances'],
+                'gross_salary' => $employeeData['gross_salary'],
+                'status' => 'processed',
+                'processed_at' => now(),
+            ]);
+            $count++;
         }
-
-        return redirect()->back()->with('success', "Payroll for " . date('F', mktime(0,0,0,$month,1)) . " $year processed successfully. Total employees: " . count($payrolls));
+        
+        $monthName = date('F', mktime(0, 0, 0, $month, 1));
+        return redirect()->route('payroll.index')->with('success', "Payroll for $monthName $year processed successfully. Total employees: $count");
     }
 
     /**
-     * Show Salary List (all payroll records)
+     * Show single payslip
      */
-    public function salaryList(Request $request)
+    public function payslip($id)
+    {
+        $payroll = Payroll::with('employee.designation', 'employee.department')
+            ->findOrFail($id);
+        
+        return Inertia::render('Payroll/Payslip', [
+            'payroll' => $payroll,
+        ]);
+    }
+
+    /**
+     * Get payroll records for filtering (API endpoint)
+     */
+    public function records(Request $request)
     {
         $query = Payroll::with('employee.designation', 'employee.department');
+        
+        if ($request->department) {
+            $query->whereHas('employee.department', function($q) use ($request) {
+                $q->where('name', $request->department);
+            });
+        }
         
         if ($request->month) {
             $query->where('month', $request->month);
         }
+        
         if ($request->year) {
             $query->where('year', $request->year);
         }
         
         $payrolls = $query->latest()->paginate(20);
         
-        $months = [
-            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
-        ];
-        $years = Payroll::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
-        
-        return Inertia::render('Payroll/SalaryList', [
-            'payrolls' => $payrolls,
-            'months' => $months,
-            'years' => $years,
-            'filters' => $request->only(['month', 'year']),
-        ]);
-    }
-
-    /**
-     * Update payroll status
-     */
-    public function updateStatus(Request $request, Payroll $payroll)
-    {
-        $validated = $request->validate([
-            'status' => 'required|in:draft,processed,paid',
-        ]);
-        
-        $payroll->update(['status' => $validated['status']]);
-        
-        return redirect()->back()->with('success', 'Payroll status updated.');
-    }
-
-    /**
-     * Delete payroll record
-     */
-    public function destroy(Payroll $payroll)
-    {
-        $payroll->delete();
-        return redirect()->back()->with('success', 'Payroll record deleted.');
+        return response()->json($payrolls);
     }
 }

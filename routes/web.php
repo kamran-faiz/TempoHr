@@ -13,6 +13,7 @@ use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\EmployeeSalaryController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\PayrollController;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -30,21 +31,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Settings Modules
     Route::resource('departments', DepartmentController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('designations', DesignationController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('leaveTypes', LeaveTypeController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('allowanceTypes', AllowanceTypeController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('employees', EmployeeController::class)->only(['index', 'show', 'store' , 'update' , 'destroy']);
-    Route::resource('leaveRequests', LeaveRequestController::class)->only(['store','index','update','destroy']);
-    Route::put('leaveRequests/{leaveRequest}/status', [LeaveRequestController::class , 'updateStatus'])->name('leaveRequests.updateStatus');
-    Route::patch('employees/{employee}/status', [EmployeeController::class , 'toggleStatus'])->name('EmployeeStatus.patch');
-    Route::resource('employeeSalary' , EmployeeSalaryController::class)->only(['index','store','update','destroy']);
+    
+    // Employee Management
+    Route::resource('employees', EmployeeController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::patch('employees/{employee}/status', [EmployeeController::class, 'toggleStatus'])->name('EmployeeStatus.patch');
+    
+    // Leave Management
+    Route::resource('leaveRequests', LeaveRequestController::class)->only(['store', 'index', 'update', 'destroy']);
+    Route::put('leaveRequests/{leaveRequest}/status', [LeaveRequestController::class, 'updateStatus'])->name('leaveRequests.updateStatus');
+    
+    // Salary Management
+    Route::resource('employeeSalary', EmployeeSalaryController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('leave-balances', LeaveBalanceController::class)->only(['index']);
-    Route::get('/run-payroll', [PayrollController::class, 'index'])->name('payroll.run');
-Route::post('/run-payroll', [PayrollController::class, 'store'])->name('payroll.store');
-Route::get('/salary-list', [PayrollController::class, 'salaryList'])->name('payroll.salary-list');
-Route::put('/payroll/{payroll}/status', [PayrollController::class, 'updateStatus'])->name('payroll.update-status');
-Route::delete('/payroll/{payroll}', [PayrollController::class, 'destroy'])->name('payroll.destroy');
+    
+    // Payroll Management
+    Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
+    Route::get('/payroll/generate', [PayrollController::class, 'generate'])->name('payroll.generate');
+    Route::post('/payroll/process', [PayrollController::class, 'process'])->name('payroll.process');
+    Route::get('/payroll/payslip/{id}', [PayrollController::class, 'payslip'])->name('payroll.payslip');
+    Route::get('/payroll/records', [PayrollController::class, 'records'])->name('payroll.records');
 });
 
 require __DIR__.'/auth.php';
