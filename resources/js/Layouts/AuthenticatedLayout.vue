@@ -100,10 +100,7 @@ const toggleMenu =(menu)=>{
                             <span class="material-symbols-outlined text-sm">balance</span>
                             Leave Balances
                         </Link>
-                        <Link :href="route('dashboard')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
-                            <span class="material-symbols-outlined text-sm">person</span>
-                            My Leaves
-                        </Link>
+                        
                     </div>
                 </div>
 
