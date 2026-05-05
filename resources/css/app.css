@@ -29,3 +29,6 @@ body {
     /* This prevents the "text" from showing while the font is loading */
     font-display: block;
 }
+.bento-card {
+  @apply bg-white border border-tempo-border rounded-xl p-container-padding;
+}

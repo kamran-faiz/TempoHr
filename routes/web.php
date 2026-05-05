@@ -11,7 +11,7 @@ use App\Http\Controllers\AllowanceTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\EmployeeSalaryController;
-
+use App\Http\Controllers\LeaveBalanceController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::put('leaveRequests/{leaveRequest}/status', [LeaveRequestController::class , 'updateStatus'])->name('leaveRequests.updateStatus');
     Route::patch('employees/{employee}/status', [EmployeeController::class , 'toggleStatus'])->name('EmployeeStatus.patch');
     Route::resource('employeeSalary' , EmployeeSalaryController::class)->only(['index','store','update','destroy']);
-    
+    Route::resource('leave-balances', LeaveBalanceController::class)->only(['index']);
 });
 
 require __DIR__.'/auth.php';
