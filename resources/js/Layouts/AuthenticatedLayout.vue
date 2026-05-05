@@ -2,8 +2,6 @@
 import {ref} from 'vue';
 import {Link ,usePage} from '@inertiajs/vue3';
 
-
-
 const user = usePage().props.auth.user;
 const openMenu = ref(null);
 const toggleMenu =(menu)=>{
@@ -12,20 +10,14 @@ const toggleMenu =(menu)=>{
     }else{
         openMenu.value=menu;
     }
- }
+}
 
- defineProps({
+defineProps({
     pageTitle: {
         type: String,
         default: 'Dashboard'
     }
 });
-
-
-
-
-
-
 </script>
 
 <template>
@@ -78,7 +70,6 @@ const toggleMenu =(menu)=>{
                             Employee Salary
                         </Link>
                     </div>
-                  
                 </div>
 
                 <!-- Leaves -->
@@ -100,7 +91,6 @@ const toggleMenu =(menu)=>{
                             <span class="material-symbols-outlined text-sm">balance</span>
                             Leave Balances
                         </Link>
-                        
                     </div>
                 </div>
 
@@ -115,11 +105,11 @@ const toggleMenu =(menu)=>{
                         <span class="material-symbols-outlined text-sm transition-transform duration-200" :class="openMenu === 'payroll' ? 'rotate-180' : ''">expand_more</span>
                     </button>
                     <div v-if="openMenu === 'payroll'" class="ml-4 mt-1 space-y-1">
-                        <Link :href="route('dashboard')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
+                        <Link :href="route('payroll.index')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
                             <span class="material-symbols-outlined text-sm">list</span>
                             Salary List
                         </Link>
-                        <Link :href="route('dashboard')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
+                        <Link :href="route('payroll.generate')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
                             <span class="material-symbols-outlined text-sm">play_circle</span>
                             Run Payroll
                         </Link>
@@ -141,15 +131,15 @@ const toggleMenu =(menu)=>{
                             <span class="material-symbols-outlined text-sm">corporate_fare</span>
                             Departments
                         </Link>
-                        <Link :href="route('dashboard')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
+                        <Link :href="route('designations.index')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
                             <span class="material-symbols-outlined text-sm">badge</span>
                             Designations
                         </Link>
-                        <Link :href="route('dashboard')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
+                        <Link :href="route('allowanceTypes.index')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
                             <span class="material-symbols-outlined text-sm">percent</span>
                             Allowance Types
                         </Link>
-                        <Link :href="route('dashboard')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
+                        <Link :href="route('leaveTypes.index')" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-tempo-muted hover:bg-tempo-sidebar hover:text-tempo-text transition-all duration-200">
                             <span class="material-symbols-outlined text-sm">beach_access</span>
                             Leave Types
                         </Link>
