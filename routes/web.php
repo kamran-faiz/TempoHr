@@ -12,6 +12,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\EmployeeSalaryController;
 use App\Http\Controllers\LeaveBalanceController;
+use App\Http\Controllers\PayrollController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -39,6 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('employees/{employee}/status', [EmployeeController::class , 'toggleStatus'])->name('EmployeeStatus.patch');
     Route::resource('employeeSalary' , EmployeeSalaryController::class)->only(['index','store','update','destroy']);
     Route::resource('leave-balances', LeaveBalanceController::class)->only(['index']);
+    Route::get('/run-payroll', [PayrollController::class, 'index'])->name('payroll.run');
+Route::post('/run-payroll', [PayrollController::class, 'store'])->name('payroll.store');
+Route::get('/salary-list', [PayrollController::class, 'salaryList'])->name('payroll.salary-list');
+Route::put('/payroll/{payroll}/status', [PayrollController::class, 'updateStatus'])->name('payroll.update-status');
+Route::delete('/payroll/{payroll}', [PayrollController::class, 'destroy'])->name('payroll.destroy');
 });
 
 require __DIR__.'/auth.php';
