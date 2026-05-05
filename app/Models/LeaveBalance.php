@@ -16,6 +16,7 @@ class LeaveBalance extends Model
         'remaining_days',
     ];
 
+
     public function employee()
     {
         return $this->belongsTo(Employee::class);
