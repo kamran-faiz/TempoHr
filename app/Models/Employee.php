@@ -44,22 +44,29 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
     public function manager()
-   {
-    return $this->belongsTo(Employee::class, 'reporting_manager_id');
-   
- }
+    {
+        return $this->belongsTo(Employee::class, 'reporting_manager_id');
+    }
 
- public function subordanarates()
- {
-    return $this->hasMany(Employee::class, 'reporting_manager_id');
- }
- public function leaveBalances()
-{
-    return $this->hasMany(LeaveBalance::class);
-}
-public function leaveRequests()
-{
-    return $this->hasMany(LeaveRequest::class);
-}
+    public function subordanarates()
+    {
+        return $this->hasMany(Employee::class, 'reporting_manager_id');
+    }
+    
+    public function leaveBalances()
+    {
+        return $this->hasMany(LeaveBalance::class);
+    }
+    
+    public function leaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+    
+    public function employeeSalary()
+    {
+        return $this->hasOne(EmployeeSalary::class)->latestOfMany();
+    }
 }
