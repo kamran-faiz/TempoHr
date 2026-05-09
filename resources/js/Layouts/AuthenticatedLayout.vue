@@ -1,6 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 import {Link ,usePage} from '@inertiajs/vue3';
+import ToastList from '@/Components/ToastList.vue';
 
 const user = usePage().props.auth.user;
 const openMenu = ref(null);
@@ -198,6 +199,7 @@ defineProps({
             <!-- Page Content -->
             <main class="flex-1">
                 <slot />
+                <ToastList />
             </main>
 
         </div>
