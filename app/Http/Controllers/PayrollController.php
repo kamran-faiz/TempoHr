@@ -29,6 +29,8 @@ class PayrollController extends Controller
             9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
         ];
         
+        $departments = \App\Models\Department::all();
+        
         return Inertia::render('Payroll/Index', [
             'payrolls' => $payrolls,
             'totalAmount' => $totalAmount,
@@ -36,6 +38,7 @@ class PayrollController extends Controller
             'pendingCount' => $pendingCount,
             'months' => $months,
             'currentYear' => Carbon::now()->year,
+            'departments' => $departments,
         ]);
     }
 
@@ -44,9 +47,10 @@ class PayrollController extends Controller
      */
     public function generate()
     {
-        $employees = Employee::with(['designation', 'department', 'employeeSalary.allowances'])
-            ->where('status', 'active')
-            ->get();
+        $employees = Employee::with(['designation', 'department', 'employeeSalary'])
+    ->where('status', 'active')
+    ->get();
+            
         
         $months = [
             1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',

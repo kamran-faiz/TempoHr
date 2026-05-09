@@ -27,6 +27,10 @@ const props = defineProps({
     currentYear: {
         type: Number,
         default: 2026
+    },
+    departments: {
+        type: Array,
+        default: () => []
     }
 });
 
@@ -35,8 +39,6 @@ const filters = ref({
     month: '',
     year: props.currentYear
 });
-
-const departments = ref(['All Departments', 'Engineering', 'Design', 'Marketing', 'Operations', 'Human Resources']);
 
 const applyFilters = () => {
     router.get('/payroll/records', filters.value, {
@@ -136,8 +138,9 @@ const getStatusText = (status) => {
                         <div class="flex flex-col">
                             <label class="text-label-caps font-manrope text-tertiary mb-1">DEPARTMENT</label>
                             <select v-model="filters.department" class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2 text-sm font-manrope focus:ring-2 focus:ring-primary-container outline-none">
-                                <option v-for="dept in departments" :key="dept" :value="dept === 'All Departments' ? '' : dept">
-                                    {{ dept }}
+                                <option value="">All Departments</option>
+                                <option v-for="dept in departments" :key="dept.id" :value="dept.name">
+                                    {{ dept.name }}
                                 </option>
                             </select>
                         </div>
