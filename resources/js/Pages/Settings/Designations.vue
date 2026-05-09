@@ -16,7 +16,7 @@ defineProps({
         type: Array,
         default: () => [],
     },
-
+    totalEmployees: Number
 });
 
 const showConfirmModal = ref(false);
@@ -127,7 +127,7 @@ const confirmDelete = () => {
                     <span class="text-stone-400 font-label-caps uppercase tracking-widest text-[10px]">Total Employees</span>
                     <span class="material-symbols-outlined text-stone-400 text-lg">groups</span>
                   </div>
-                  <p class="font-display-num text-3xl text-stone-900">156</p>
+                  <p class="font-display-num text-3xl text-stone-900">{{ totalEmployees }}</p>
                 </div>
               </div>
 

@@ -12,10 +12,13 @@ class DesignationController extends Controller
     public function index()
     {
         $designations = Designation::with('department')->latest()->get();
-        $departments = Department::All();
+        $departments = Department::all();
+        $totalEmployees = \App\Models\Employee::count();
+        
         return Inertia::render('Settings/Designations', [
             'designations' => $designations,
             'departments' => $departments,
+            'totalEmployees' => $totalEmployees
         ]);
     }
 

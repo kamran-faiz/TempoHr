@@ -14,6 +14,7 @@ defineProps({
         type: Array,
         default: () => [],
     },
+    totalEmployees: Number
 });
 const selectedDepartment = ref(null);
 
@@ -103,11 +104,11 @@ const updateDepartment = () => {
               </div>
               <div class="bg-[#F8F3EB] p-6 rounded-xl border border-[#E8E0D5]">
                 <p class="font-label-caps text-[#2D2A26]/60 mb-2">TOTAL EMPLOYEES</p>
-                <p class="font-display-num text-3xl">124</p>
+                <p class="font-display-num text-3xl">{{ totalEmployees }}</p>
               </div>
               <div class="bg-[#F8F3EB] p-6 rounded-xl border border-[#E8E0D5]">
-                <p class="font-label-caps text-[#2D2A26]/60 mb-2">ACTIVE BUDGETS</p>
-                <p class="font-display-num text-3xl">100%</p>
+                <p class="font-label-caps text-[#2D2A26]/60 mb-2">OPERATIONAL STATUS</p>
+                <p class="font-display-num text-3xl">Active</p>
               </div>
             </div>
 

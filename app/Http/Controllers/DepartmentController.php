@@ -13,9 +13,11 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::latest()->get();
+        $departments = Department::all();
+        $totalEmployees = \App\Models\Employee::count();
         return Inertia::render('Settings/Departments', [
             'departments' => $departments,
+            'totalEmployees' => $totalEmployees
         ]);
     }
 
