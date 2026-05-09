@@ -22,11 +22,11 @@ class EmployeeController extends Controller
 ) {}
     public function index()
     {
-        $employee = Employee::with('department', 'designation')->latest()->get();
-        $departments = Department::All();
-        $designations = Designation::All();
+        $employees = Employee::with('department', 'designation')->latest()->paginate(12);
+        $departments = Department::all();
+        $designations = Designation::all();
         return Inertia::render('Employees/Index', [
-            'employees' => $employee,
+            'employees' => $employees,
             'departments' => $departments,
             'designations' => $designations,
         ]);

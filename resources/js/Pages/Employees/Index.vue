@@ -8,8 +8,8 @@ import {ref} from 'vue';
 
 defineProps ({
   employees: {
-    type : Array ,
-    default :() => [],
+    type : Object ,
+    default :() => ({}),
   },
   departments: {
      type : Array ,
@@ -151,15 +151,13 @@ const openEditModal = (employee) => {
         <div class="flex flex-wrap items-center gap-3">
           <div class="flex items-center gap-3 bg-white border border-[#E8E0D5] p-1.5 rounded-xl">
             <select class="bg-transparent border-none text-sm focus:ring-0 cursor-pointer font-label-clean outline-none">
-              <option>All Departments</option>
-              <option>Engineering</option>
-              <option>Design</option>
+              <option value="">All Departments</option>
+              <option v-for="dept in departments" :key="dept.id" :value="dept.id">{{ dept.name }}</option>
             </select>
             <div class="w-px h-4 bg-[#E8E0D5]"></div>
             <select class="bg-transparent border-none text-sm focus:ring-0 cursor-pointer font-label-clean outline-none">
-              <option>All Designations</option>
-              <option>Lead</option>
-              <option>Senior</option>
+              <option value="">All Designations</option>
+              <option v-for="desig in designations" :key="desig.id" :value="desig.id">{{ desig.name }}</option>
             </select>
           </div>
           <button @click="openCreateModal" class="flex items-center gap-2 px-6 py-3 bg-[#F5D142] text-[#2D2A26] font-semibold rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-sm">
@@ -171,7 +169,7 @@ const openEditModal = (employee) => {
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-bento-gutter">
         
-        <div  v-for="employee in employees" :key="employee.id" class="bg-white p-6 rounded-xl border border-[#E8E0D5] group hover:border-[#F5D142] transition-all duration-300">
+        <div  v-for="employee in employees.data" :key="employee.id" class="bg-white p-6 rounded-xl border border-[#E8E0D5] group hover:border-[#F5D142] transition-all duration-300">
           <div class="flex relative justify-between items-start mb-6">
            <div class="w-16 h-16 rounded-full overflow-hidden bg-secondary-container flex items-center justify-center text-xl font-bold text-[#2D2A26]">
   <img 
@@ -212,16 +210,14 @@ const openEditModal = (employee) => {
         </div>
         </div>
 
-      <div class="mt-12 flex items-center justify-between pb-10">
-        <p class="font-label-clean text-secondary text-sm">Showing 1 to 1 of 1 employees</p>
+      <div v-if="employees.data?.length" class="mt-12 flex items-center justify-between pb-10">
+        <p class="font-label-clean text-secondary text-sm">Showing {{ employees.from }} to {{ employees.to }} of {{ employees.total }} employees</p>
         <div class="flex items-center gap-2">
-          <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-[#E8E0D5] bg-white hover:bg-[#F5F0E8]">
-            <span class="material-symbols-outlined">chevron_left</span>
-          </button>
-          <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-[#F5D142] font-bold shadow-sm">1</button>
-          <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-[#E8E0D5]">2</button>
-          <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-[#E8E0D5] bg-white hover:bg-[#F5F0E8]">
-            <span class="material-symbols-outlined">chevron_right</span>
+          <button v-for="link in employees.links" :key="link.label" 
+            @click="link.url && router.get(link.url)"
+            v-html="link.label"
+            class="min-w-[40px] h-10 flex items-center justify-center border border-[#E8E0D5] rounded-lg transition-colors"
+            :class="{ 'bg-[#F5D142] font-bold shadow-sm border-[#F5D142]': link.active, 'bg-white hover:bg-[#F5F0E8] text-secondary': !link.active, 'opacity-50 cursor-not-allowed': !link.url }">
           </button>
         </div>
       </div>
