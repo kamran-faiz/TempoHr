@@ -6,7 +6,9 @@ defineProps({
     employees: {
         type: Array,
         default: () => []
-    }
+    },
+    activeLeaves: Number,
+    pendingRequests: Number
 })
 </script>
 
@@ -46,14 +48,14 @@ defineProps({
           <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">ACTIVE LEAVE</span>
           <span class="material-symbols-outlined text-primary">beach_access</span>
         </div>
-        <p class="font-display-num text-display-num text-on-surface">12</p>
+        <p class="font-display-num text-display-num text-on-surface">{{ activeLeaves }}</p>
       </div>
       <div class="bento-card rounded-xl">
         <div class="flex justify-between items-start mb-4">
           <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">PENDING REQUESTS</span>
           <span class="material-symbols-outlined text-primary">pending_actions</span>
         </div>
-        <p class="font-display-num text-display-num text-on-surface">05</p>
+        <p class="font-display-num text-display-num text-on-surface">{{ pendingRequests }}</p>
       </div>
       <div class="bento-card rounded-xl border-primary-container bg-surface-container-lowest">
         <div class="flex justify-between items-start mb-4">

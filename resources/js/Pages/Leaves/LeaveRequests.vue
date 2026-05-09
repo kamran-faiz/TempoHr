@@ -22,6 +22,14 @@ const props = defineProps({
     leaveRequests: {
     type: Array,
     default: () => []
+},
+userBalances: {
+    type: Array,
+    default: () => []
+},
+teamStats: {
+    type: Object,
+    default: () => ({})
 }
 })
 
@@ -96,6 +104,26 @@ const rejectedCount = computed(() => {
     return props.leaveRequests.filter(request => request.status === 'rejected').length;
 });
 
+const search = ref('');
+const statusFilter = ref('all');
+const filteredRequests = computed(() => {
+    let requests = props.leaveRequests;
+    
+    if (statusFilter.value !== 'all') {
+        requests = requests.filter(request => request.status === statusFilter.value);
+    }
+
+    if (!search.value) return requests;
+    
+    const query = search.value.toLowerCase();
+    return requests.filter(request => {
+        const fullName = `${request.employee.first_name} ${request.employee.last_name}`.toLowerCase();
+        const type = request.leave_type.name.toLowerCase();
+        const reason = (request.reason || '').toLowerCase();
+        return fullName.includes(query) || type.includes(query) || reason.includes(query);
+    });
+});
+
 
 
 </script>
@@ -107,7 +135,7 @@ const rejectedCount = computed(() => {
 <div class="flex items-center gap-4">
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">search</span>
-<input class="bg-white border border-[#E8E0D5] rounded-full py-2 pl-10 pr-4 w-64 focus:outline-none focus:ring-2 focus:ring-[#F5D142] text-sm" placeholder="Search requests..." type="text"/>
+<input v-model="search" class="bg-white border border-[#E8E0D5] rounded-full py-2 pl-10 pr-4 w-64 focus:outline-none focus:ring-2 focus:ring-[#F5D142] text-sm" placeholder="Search requests..." type="text"/>
 </div>
 
 
@@ -129,10 +157,12 @@ const rejectedCount = computed(() => {
 </div>
 <div class="flex items-center gap-3 border-l border-[#E8E0D5] pl-6">
 <div class="text-right">
-<p class="text-sm font-semibold text-[#2D2A26]">Alex Rivers</p>
+<p class="text-sm font-semibold text-[#2D2A26]">{{ $page.props.auth.user.name }}</p>
 <p class="text-[10px] text-stone-500 uppercase tracking-wider">Administrator</p>
 </div>
-<img alt="Administrator Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white" data-alt="Close-up professional headshot of a smiling man in business attire with soft natural lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkfWZMk-W6BTFogY-w7V54vAS4CtgekwZHxGrIzKzx7WcxyvfeifRgGZE8rstPK_ySAqOXwWFUzZqvJDPHjLfle17SBtm4_Gy65w6b_n61VVHH4Ffs5iS8JZcgrd9BlbkGp5SNXdNXnoQVaGehX9nUhRMwFTeMTS-zMlsqx9KRo2ySPP_8OwbfOYsYuhw-U1VVo7PbPBek1mlIHXFgBGQESyLiXo3zi8FyUcsD3PRjCoRQjKLH2d9jV3i2aJksIXuhASsEGFK6881V"/>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+    <span class="material-symbols-outlined text-on-primary-container">person</span>
+</div>
 </div>
 </div>
 </header>
@@ -182,15 +212,18 @@ const rejectedCount = computed(() => {
 <div class="px-container-padding py-6 border-b border-[#E8E0D5] flex justify-between items-center">
 <h3 class="font-headline-md text-headline-md text-on-surface">Active Leave Requests</h3>
 <div class="flex gap-2">
-<button class="bg-[#FAF8F5] border border-[#E8E0D5] px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-<span class="material-symbols-outlined text-sm">filter_list</span> Filter
-                            </button>
+    <select v-model="statusFilter" class="bg-[#FAF8F5] border border-[#E8E0D5] px-4 py-2 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-[#F5D142] outline-none cursor-pointer">
+        <option value="all">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+    </select>
 </div>
 </div>
 <div class="divide-y divide-[#E8E0D5]">
 <!-- Row 1 -->
  
-<div v-for="request in leaveRequests" :key="request.id" class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
+<div v-for="request in filteredRequests" :key="request.id" class="px-container-padding py-6 flex items-center hover:bg-[#FAF8F5] transition-colors">
 
 <div class="w-1/4 flex items-center gap-4">
 <img alt="Employee Photo" class="w-10 h-10 rounded-full object-cover" data-alt="Professional headshot of a young woman with a warm smile, outdoor lighting with soft greenery background" :src="`/storage/${request.employee.profile_image}`"/>
@@ -237,47 +270,26 @@ const rejectedCount = computed(() => {
 <!-- Side Panel: Leave Balance Summary -->
 <aside class="w-1/4">
 <div class="bento-card p-container-padding sticky top-24">
-<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Leave Balance Summary</h3>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Your Leave Balance</h3>
 <div class="space-y-8">
-<!-- Balance Item 1 -->
-<div>
+<!-- Dynamic Balance Items -->
+<div v-for="balance in userBalances" :key="balance.id">
 <div class="flex justify-between items-end mb-2">
 <div>
-<p class="font-label-caps text-stone-500">ANNUAL LEAVE</p>
-<p class="font-semibold text-on-surface">14 Days Left</p>
+<p class="font-label-caps text-stone-500">{{ balance.leave_type.name }}</p>
+<p class="font-semibold text-on-surface">{{ balance.remaining_days }} Days Left</p>
 </div>
-<p class="text-xs text-stone-400">Total: 25</p>
-</div>
-<div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
-<div class="bg-[#F5D142] h-full w-[56%] rounded-full"></div>
-</div>
-</div>
-<!-- Balance Item 2 -->
-<div>
-<div class="flex justify-between items-end mb-2">
-<div>
-<p class="font-label-caps text-stone-500">SICK LEAVE</p>
-<p class="font-semibold text-on-surface">8 Days Left</p>
-</div>
-<p class="text-xs text-stone-400">Total: 10</p>
+<p class="text-xs text-stone-400">Total: {{ balance.allocated_days }}</p>
 </div>
 <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
-<div class="bg-red-300 h-full w-[80%] rounded-full"></div>
+<div class="bg-[#F5D142] h-full rounded-full" :style="{ width: (balance.remaining_days / balance.allocated_days * 100) + '%' }"></div>
 </div>
 </div>
-<!-- Balance Item 3 -->
-<div>
-<div class="flex justify-between items-end mb-2">
-<div>
-<p class="font-label-caps text-stone-500">PERSONAL DAYS</p>
-<p class="font-semibold text-on-surface">3 Days Left</p>
+
+<div v-if="userBalances.length === 0" class="text-sm text-stone-500 italic">
+    No leave balances assigned.
 </div>
-<p class="text-xs text-stone-400">Total: 5</p>
-</div>
-<div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
-<div class="bg-stone-400 h-full w-[60%] rounded-full"></div>
-</div>
-</div>
+
 <div class="pt-6 border-t border-[#E8E0D5]">
 <div class="bg-[#FAF8F5] p-4 rounded-xl">
 <p class="font-label-caps text-[#705d00] mb-2 flex items-center gap-2">
@@ -292,14 +304,12 @@ const rejectedCount = computed(() => {
 <div class="mt-10">
 <h4 class="font-label-caps text-stone-500 mb-4">TEAM AVAILABILITY TODAY</h4>
 <div class="flex -space-x-3 overflow-hidden">
-<img alt="User" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="Small avatar of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhAO68A-pvW4EGe0MAjhmPFUHfht7NQSSzJ4garCxDdfcMAqDybTbpRhvwPhrXKlMcloNcm-PXAh0VY9n8yho_FaLQ9t7XKxjFtwNZl24j6a5TBv6HPOKtzOlR-ufNSXUBCyVZMTlh1t90TaOzP04vuNsDOi41xiG2WDwlbnFc7x2nDb2EwkKchWPl2ZlISvkHaJntmDBqyBPV1y_65e8RKm_643kAm90VdBdMowSj9caGawS6nJmOJyBGV1A_ESZEqOU3kk9irFJy"/>
-<img alt="User" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="Small avatar of a professional woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Eu3juIDGDQfNMMlAx8DnmoJNhMlY5rhD0C0rSjIEzBb6LEsMfOx_6oXSh2yvPA5F6OBpLyf6dh6uMP7O5IjPbBaShMek6OEg-DpJojLzqfmY3yc6L-Wb0ZOI11gGc_s1h-zfWYOqL1UZxkbepIKy77C251rTm5SLRCJaj6GoV9vhcprGxcy1d6XfRDk2m7PdXKtiDsEeRLFOIaPOCiV0BZaGafSxUOzmiLtRAqaIiCyX6zIqUT8xmSljEgWcOUU-hqe7X_OmrlvK"/>
-<img alt="User" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="Small avatar of a man with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC03xPgMfOaaJB8pVm2QCG38pdzMF3yfXu06kRX-LiG1jJYo2I76Lca6FHKvYOboo2DazJhN4peFxy6O1tujgSHZZayTv-U9epne6f93qgIF7JPPZXV5-JKtXRUnKc5yBWUR1JAsAxnnkQ79KOSaOnkw9JJAb-ek4iE-RWj267v2PwprhuRucdgSe4S7F-Qo6fnEVb06Ali8l8OqDFJjtg4QDozUb7rD-66QeoYj5IsuQgyQ50GM_rROrp0eCQpb-tSfOFHsznaOYyh"/>
-<div class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-[#F5D142] text-[10px] font-bold text-[#2D2A26]">
-                                +12
+<img v-for="avatar in teamStats.onlineAvatars" :key="avatar.id" :alt="User" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" :src="avatar.profile_image ? `/storage/${avatar.profile_image}` : 'https://ui-avatars.com/api/?name=User'" />
+<div v-if="teamStats.total > 3" class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-[#F5D142] text-[10px] font-bold text-[#2D2A26]">
+                                +{{ teamStats.total - 3 }}
                             </div>
 </div>
-<p class="text-xs text-stone-500 mt-3">88% of your team is online</p>
+<p class="text-xs text-stone-500 mt-3">{{ teamStats.onlinePercent }}% of your team is online</p>
 </div>
 </div>
 </aside>

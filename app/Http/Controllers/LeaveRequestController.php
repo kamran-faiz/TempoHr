@@ -20,10 +20,36 @@ class LeaveRequestController extends Controller
         $employees = Employee::all();
         $leaveTypes = LeaveType::all();
        
-          return Inertia::render('Leaves/LeaveRequests', [
+        // Dynamic data for side panel
+        $user = auth()->user()->load('employee.leaveBalances.leaveType');
+        $userBalances = $user->employee ? $user->employee->leaveBalances : [];
+
+        $totalEmployees = Employee::where('status', 'active')->count();
+        $onLeaveToday = LeaveRequest::where('status', 'approved')
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->count();
+        
+        $teamStats = [
+            'total' => $totalEmployees,
+            'onLeave' => $onLeaveToday,
+            'onlinePercent' => $totalEmployees > 0 ? round((($totalEmployees - $onLeaveToday) / $totalEmployees) * 100) : 0,
+            'onlineAvatars' => Employee::where('status', 'active')
+                ->whereDoesntHave('leaveRequests', function($q) {
+                    $q->where('status', 'approved')
+                      ->whereDate('start_date', '<=', now())
+                      ->whereDate('end_date', '>=', now());
+                })
+                ->take(3)
+                ->get(['profile_image'])
+        ];
+
+        return Inertia::render('Leaves/LeaveRequests', [
             'leaveRequests' => $leaveRequest,
             'employees' => $employees,      
-            'leaveTypes' => $leaveTypes 
+            'leaveTypes' => $leaveTypes,
+            'userBalances' => $userBalances,
+            'teamStats' => $teamStats
         ]);
     }
 
